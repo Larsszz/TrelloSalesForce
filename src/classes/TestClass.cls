@@ -3,5 +3,7 @@
  */
 
 public with sharing class TestClass {
+    static void test() {
 
+    }
 }
