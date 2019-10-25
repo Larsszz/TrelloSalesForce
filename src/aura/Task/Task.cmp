@@ -1,0 +1,15 @@
+<!--
+ - Created by IlarionTokarskyi on 10/25/2019.
+ -->
+
+<aura:component description="Task">
+    <aura:attribute name="task" type="TaskBoard__c" />
+    <div class="slds-box_border">
+        <div class="slds-m-around--medium">
+            <lightning:formattedText value="{!v.task.Name}" /><br/>
+        </div>
+        <div class="slds-m-around--small">
+            <lightning:formattedText value="{!v.task.Description__c}"/>
+        </div>
+    </div>
+</aura:component>

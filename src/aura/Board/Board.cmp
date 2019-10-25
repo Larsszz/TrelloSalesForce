@@ -1,0 +1,31 @@
+<!--
+ - Created by IlarionTokarskyi on 10/25/2019.
+ -->
+
+<aura:component controller="BoardController" description="Board" implements="force:lightningQuickAction,force:hasRecordId,
+            flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="board" type="Board__c"/>
+    <aura:attribute name="categories" type="Category__c[]"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+
+
+        <div aura:id="toHide">
+            <lightning:recordForm objectApiName="Category__c" layoutType="Compact" />
+        </div>
+        <lightning:button onclick="{!c.addCategory}" label="Add Stage" variant="brand"/>
+
+
+
+    <lightning:layout multipleRows="true" horizontalAlign="spread" verticalAlign="start">
+        <aura:iteration items="{!v.categories}" var="category">
+            <lightning:layoutItem flexibility="grow" size="3">
+                <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
+            </lightning:layoutItem>
+        </aura:iteration>
+    </lightning:layout>
+
+
+
+</aura:component>

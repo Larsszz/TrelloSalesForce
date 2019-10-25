@@ -29,7 +29,7 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
-                            <option name="name" value="TestClass" />
+                            <option name="name" value="BoardController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                         </list>
@@ -47,14 +47,6 @@
                       <option name="wildcard" value="false" />
                     </MetadataType>
                     <MetadataType>
-                      <option name="entries">
-                        <list>
-                          <MetadataEntry>
-                            <option name="name" value="AccountTrigger" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                        </list>
-                      </option>
                       <option name="name" value="ApexTrigger" />
                     </MetadataType>
                     <MetadataType>
@@ -104,6 +96,26 @@
                       <option name="wildcard" value="false" />
                     </MetadataType>
                     <MetadataType>
+                      <option name="entries">
+                        <list>
+                          <MetadataEntry>
+                            <option name="name" value="Board" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="BoardApp" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="Category" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="Task" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                        </list>
+                      </option>
                       <option name="name" value="AuraDefinitionBundle" />
                     </MetadataType>
                     <MetadataType>

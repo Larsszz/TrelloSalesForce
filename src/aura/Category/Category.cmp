@@ -1,0 +1,20 @@
+<!--
+ - Created by IlarionTokarskyi on 10/25/2019.
+ -->
+
+<aura:component description="Category">
+    <aura:attribute name="category" type="Category__c"/>
+    <aura:attribute name="tasks" type="TaskBoard__c[]"/>
+    <div class="slds-box_border">
+        <div class="slds-m-around--small">
+            <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
+            <aura:iteration var="task" items="{!v.tasks}">
+                <lightning:layoutItem size="12">
+                    <c:Task task="{!task}"/>
+                </lightning:layoutItem>
+            </aura:iteration>
+        </div>
+
+    </div>
+
+</aura:component>
