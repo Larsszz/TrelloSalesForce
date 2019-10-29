@@ -1,0 +1,11 @@
+<!--
+ - Created by IlarionTokarskyi on 10/29/2019.
+ -->
+
+<aura:component description="dropDiv">
+    <aura:registerEvent name="changePosition" type="c:changePositionEvent"/>
+    <aura:attribute name="index" type="Integer"/>
+    <div ondragover="{!c.allowDrop}">
+            <br/>
+    </div>
+</aura:component>

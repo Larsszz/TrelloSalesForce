@@ -1,0 +1,7 @@
+<!--
+ - Created by IlarionTokarskyi on 10/29/2019.
+ -->
+
+<aura:event type="COMPONENT" description="dragTask" access="public">
+    <aura:attribute name="index" type="Integer"/>
+</aura:event>

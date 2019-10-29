@@ -6,7 +6,6 @@
     doInit: function (component, event, helper) {
         let action = component.get("c.getNewBoard");
         let id = component.get("v.recordId");
-        console.log("Id is     " + id);
         action.setParams({"id": id});
         action.setCallback(this, function (response) {
             let state = response.getState();
@@ -17,16 +16,51 @@
             }
         });
         $A.enqueueAction(action);
-        let element = component.find("toHide");
-        element.style.display = 'none';
     },
 
-    addCategory: function (component, event, helper) {
+    showHideAddStage: function (component, event, helper) {
         let element = component.find("toHide");
-        if (element.style.display === 'none') {
-            element.style.display = 'block';
+        if ($A.util.hasClass(element, "slds-hide")) {
+            $A.util.removeClass(element, "slds-hide");
         } else {
-            element.style.display = 'none';
+            $A.util.addClass(element, "slds-hide");
+        }
+    },
+
+    addStage: function (component, event, helper) {
+        let inputName = component.find("inputStage").get("v.value");
+        let id = component.get("v.recordId");
+        let action = component.get("c.crateNewCategory");
+        action.setParams({"id": id, "name": inputName});
+        action.setCallback(this, function (response) {
+            if (response.getState() === "SUCCESS") {
+                let categories = component.get("v.categories");
+                categories.push(response.getReturnValue());
+                component.set("v.categories", categories);
+
+            } else {
+                console.log('Failed create stage with state:  ' + response.getState());
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+
+    deleteStage: function (component, event, helper) {
+        let category = event.getParam("category");
+        let categories = component.get("v.categories");
+        let index = -1;
+        console.log(categories.length);
+        for (let i = 0; i < categories.length; i++) {
+            if (Object.values(category)[0] === Object.values(categories[i])[0]) {
+                console.log(categories[i]);
+                index = i;
+            }
+        }
+        console.log(index);
+        if (index > -1) {
+            categories.splice(index, 1);
+            component.set("v.categories", categories);
         }
     }
 });

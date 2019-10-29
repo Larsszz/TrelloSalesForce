@@ -1,0 +1,7 @@
+<!--
+ - Created by IlarionTokarskyi on 10/28/2019.
+ -->
+
+<aura:event type="COMPONENT" description="CategoryDelete" access="global">
+    <aura:attribute name="category" type="Category__c"/>
+</aura:event>

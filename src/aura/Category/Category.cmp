@@ -2,17 +2,42 @@
  - Created by IlarionTokarskyi on 10/25/2019.
  -->
 
-<aura:component description="Category">
+<aura:component description="Category" controller="CategoryController">
     <aura:attribute name="category" type="Category__c"/>
-    <aura:attribute name="tasks" type="TaskBoard__c[]"/>
+    <aura:attribute name="tasks" type="TaskBoard__c[]" default="[]"/>
+    <aura:attribute name="position" type="Integer" default="0" />
+    <aura:registerEvent name="deleteEvent" type="c:CategoryDelete"/>
+    <aura:handler name="dragTask" event="c:dragTask" action="{!c.deleteByDrop}"/>
+    <aura:handler name="changePosition" event="c:changePositionEvent" action="{!c.setPosition}"/>
     <div class="slds-box_border">
-        <div class="slds-m-around--small">
-            <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
-            <aura:iteration var="task" items="{!v.tasks}">
+        <div class="slds-m-around--small" ondrop="{!c.onDrop}">
+            <lightning:layout multipleRows="true" horizontalAlign="spread">
+                <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
+                <lightning:layout>
+                    <lightning:layoutItem size="3">
+                        <lightning:button variant="destructive" label="X" onclick="{!c.deleteCategory}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layout>
+            <aura:iteration indexVar="index" var="task" items="{!v.tasks}">
                 <lightning:layoutItem size="12">
-                    <c:Task task="{!task}"/>
+                    <c:dropDiv index="{!index}"/>
+                    <c:Task task="{!task}" index="{!index}"/>
                 </lightning:layoutItem>
             </aura:iteration>
+            <c:dropDiv index="{!v.tasks.length}"/>
+            <div class="slds-m-around--small">
+                <lightning:button class="slds-button_stretch" label="Add Task" variant="neutral"
+                                  onclick="{!c.showHideTask}"/>
+            </div>
+
+            <div class="slds-hide" aura:id="inputTask">
+                <lightning:input label="Task Name" type="text" aura:id="inputTaskName"/>
+                <lightning:input type="text" label="Task Description" aura:id="inputTaskDescription"/>
+                <lightning:button label="Add task" variant="success" onclick="{!c.addTask}"/>
+            </div>
+
+
         </div>
 
     </div>
