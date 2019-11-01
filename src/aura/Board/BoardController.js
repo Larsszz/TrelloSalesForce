@@ -62,5 +62,26 @@
             categories.splice(index, 1);
             component.set("v.categories", categories);
         }
+    },
+
+    changeCategoryPosition: function (component, event, helper) {
+        let categories = component.get("v.categories");
+        let index = event.getParam("index");
+        let categoryToUpdate = event.getParam("category");
+        let oldIndex = -1;
+        for (let i = 0; i < categories.length; i++) {
+            if (JSON.stringify(categoryToUpdate) === JSON.stringify(categories[i])) {
+                oldIndex = i;
+            }
+        }
+        categories.splice(oldIndex, 1);
+        if (index >= oldIndex) index = index - 1;
+        categories.splice(index, 0, categoryToUpdate);
+        component.set("v.categories", categories);
+        let action = component.get("c.updateCategoriesPosition");
+        action.setParams({"category": categoryToUpdate, "position": index});
+        $A.enqueueAction(action);
     }
+
+
 });

@@ -4,8 +4,9 @@
 
 <aura:component description="dropDiv">
     <aura:registerEvent name="changePosition" type="c:changePositionEvent"/>
+    <aura:registerEvent name="correctlyDelete" type="c:correctlyDelete"/>
     <aura:attribute name="index" type="Integer"/>
-    <div ondragover="{!c.allowDrop}">
+    <div ondragover="{!c.allowDrop}" ondrop="{!c.onDrop}">
             <br/>
     </div>
 </aura:component>

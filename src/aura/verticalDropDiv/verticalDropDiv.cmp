@@ -1,0 +1,11 @@
+<!--
+ - Created by IlarionTokarskyi on 10/30/2019.
+ -->
+
+<aura:component description="verticalDropDiv">
+    <aura:attribute name="index" type="Integer" />
+    <aura:registerEvent name="changeCategoryPosition" type="c:changeCategoryPosition" />
+    <div ondragover="{!c.allowDrop}" ondrop="{!c.onDrop}">
+        <br/>
+    </div>
+</aura:component>

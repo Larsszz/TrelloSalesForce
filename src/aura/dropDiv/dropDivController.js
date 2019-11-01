@@ -10,5 +10,10 @@
         let changeEvent = component.getEvent("changePosition");
         changeEvent.setParams({"index": index});
         changeEvent.fire();
+    },
+
+    onDrop : function (component, event, helper) {
+        let appEvent = $A.get("e.c:correctlyDelete");
+        appEvent.fire();
     }
 });

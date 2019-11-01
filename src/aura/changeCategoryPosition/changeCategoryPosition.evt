@@ -1,0 +1,8 @@
+<!--
+ - Created by IlarionTokarskyi on 10/30/2019.
+ -->
+
+<aura:event type="COMPONENT" description="changeCategoryPosition" access="public">
+    <aura:attribute name="index" type="Integer" />
+    <aura:attribute name="category" type="Category__c" />
+</aura:event>

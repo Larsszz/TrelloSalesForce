@@ -1,0 +1,6 @@
+<!--
+ - Created by IlarionTokarskyi on 10/30/2019.
+ -->
+
+<aura:event type="APPLICATION" description="correctlyDelete" access="public">
+</aura:event>

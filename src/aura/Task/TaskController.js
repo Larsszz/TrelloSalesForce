@@ -6,7 +6,6 @@
     startDrag : function (component, event, helper) {
         event.dataTransfer.dropEffect = "move";
         let task = component.get("v.task");
-        let index = component.get("v.index");
         event.dataTransfer.setData('task', JSON.stringify(task));
     },
 

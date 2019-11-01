@@ -2,38 +2,36 @@
  - Created by IlarionTokarskyi on 10/25/2019.
  -->
 
-<aura:component controller="BoardController" description="Board" implements="force:lightningQuickAction,force:hasRecordId,
-            flexipage:availableForAllPageTypes" access="global">
+<aura:component controller="BoardController" description="Board" implements="force:lightningQuickAction,force:hasRecordId,flexipage:availableForAllPageTypes" access="global">
     <aura:attribute name="recordId" type="String"/>
     <aura:attribute name="board" type="Board__c"/>
     <aura:attribute name="categories" type="Category__c[]"/>
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
-    <aura:handler name="deleteEvent" event="c:CategoryDelete" action="{!c.deleteStage}" />
-
+    <aura:handler name="deleteEvent" event="c:CategoryDelete" action="{!c.deleteStage}"/>
+    <aura:handler name="changeCategoryPosition" event="c:changeCategoryPosition" action="{!c.changeCategoryPosition}" />
 
     <lightning:layoutItem size="3" class="slds-m-around--small">
         <div aura:id="toHide" class="slds-hide">
             <lightning:input aura:id="inputStage" label="Stage Name" type="text" variant="standard" required="true"/>
             <lightning:button class="slds-m-around--small" label="Add" onclick="{!c.addStage}" variant="success"/>
         </div>
-        <lightning:button class="slds-m-around--small" onclick="{!c.showHideAddStage}" label="Add Stage" variant="brand"/>
+        <lightning:button class="slds-m-around--small" onclick="{!c.showHideAddStage}" label="Add Stage"
+                          variant="brand"/>
     </lightning:layoutItem>
 
 
+    <lightning:layout multipleRows="true" verticalAlign="start">
+        <aura:iteration items="{!v.categories}" var="category" indexVar="index">
 
+            <c:verticalDropDiv index="{!index}"/>
+            <lightning:layoutItem flexibility="grow" size="2">
+                <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
+            </lightning:layoutItem>
+        </aura:iteration>
 
-        <lightning:layout multipleRows="true" verticalAlign="start">
-            <aura:iteration items="{!v.categories}" var="category">
+        <c:verticalDropDiv index="{!v.categories.length}"/>
 
-                    <lightning:layoutItem class="slds-m-around--small" flexibility="grow" size="2">
-                        <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
-                    </lightning:layoutItem>
-
-            </aura:iteration>
-        </lightning:layout>
-
-
-
+    </lightning:layout>
 
 
 </aura:component>

@@ -59,9 +59,9 @@
     },
 
     onDrop: function (component, event, helper) {
-        event.preventDefault();
+        //event.preventDefault();
         let tasks = component.get("v.tasks");
-        let index = component.get("v.position");
+        let index = component.get("v.positionToTask");
         let taskToAdd = JSON.parse(event.dataTransfer.getData('task'));
         if (tasks !== undefined) {
             tasks.splice(index, 0, taskToAdd);
@@ -76,14 +76,27 @@
     },
 
     deleteByDrop: function (component, event, helper) {
-        let index = event.getParam("index");
-        let tasks = component.get("v.tasks");
-        tasks.splice(index, 1);
-        component.set("v.tasks", tasks);
+        if (component.get("v.approvePosition")) {
+            let index = event.getParam("index");
+            let tasks = component.get("v.tasks");
+            tasks.splice(index, 1);
+            component.set("v.tasks", tasks);
+            component.set("v.approvePosition", false);
+        }
     },
 
     setPosition: function (component, event, helper) {
         let index = event.getParam("index");
-        component.set("v.position", index);
+        component.set("v.positionToTask", index);
+    },
+
+    correctlyDelete : function (component, event, helper) {
+        component.set("v.approvePosition", true);
+    },
+
+    startDrag : function (component, event, helper) {
+        event.dataTransfer.dropEffect = "move";
+        let category = component.get("v.category");
+        event.dataTransfer.setData('category', JSON.stringify(category));
     }
 });

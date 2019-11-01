@@ -14,6 +14,12 @@ public with sharing class CategoryController {
     @AuraEnabled
     public static TaskBoard__c addTaskByInput(String name, String description, String idCategory) {
         TaskBoard__c task = new TaskBoard__c(Name = name, Description__c = description, Category__c = idCategory);
+        List<AggregateResult> results = [SELECT MAX(Position__c) maxx FROM TaskBoard__c WHERE Category__c = :idCategory];
+        if (results[0].get('maxx')==null) {
+            task.Position__c = 0;
+        } else {
+            task.Position__c = Integer.valueOf(results[0].get('maxx')) + 1;
+        }
         insert task;
         return task;
     }
@@ -23,10 +29,18 @@ public with sharing class CategoryController {
         task.Category__c = category.Id;
         task.Position__c = position;
         update task;
-        List<TaskBoard__c> toUpdate = [SELECT Id, Position__c FROM TaskBoard__c WHERE Category__c = :category.Id AND
-            Position__c >=: position AND Id !=: task.Id ORDER BY Position__c];
+        List<TaskBoard__c> toUpdate = [
+                SELECT Id, Position__c
+                FROM TaskBoard__c
+                WHERE Category__c = :category.Id AND Id != :task.Id
+                ORDER BY Position__c
+        ];
         for (Integer i = 0; i < toUpdate.size(); i++) {
-            toUpdate[i].Position__c = task.Position__c+1+i;
+            if (toUpdate[i].Position__c < position) {
+                toUpdate[i].Position__c = i;
+            } else {
+                toUpdate[i].Position__c = i + 1;
+            }
         }
         update toUpdate;
     }

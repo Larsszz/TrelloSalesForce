@@ -5,11 +5,14 @@
 <aura:component description="Category" controller="CategoryController">
     <aura:attribute name="category" type="Category__c"/>
     <aura:attribute name="tasks" type="TaskBoard__c[]" default="[]"/>
-    <aura:attribute name="position" type="Integer" default="0" />
+    <aura:attribute name="positionToTask" type="Integer" default="0"/>
+    <aura:attribute name="approvePosition" type="Boolean" default="false"/>
     <aura:registerEvent name="deleteEvent" type="c:CategoryDelete"/>
     <aura:handler name="dragTask" event="c:dragTask" action="{!c.deleteByDrop}"/>
     <aura:handler name="changePosition" event="c:changePositionEvent" action="{!c.setPosition}"/>
-    <div class="slds-box_border">
+    <aura:handler event="c:correctlyDelete" action="{!c.correctlyDelete}" />
+
+    <div class="slds-box_border" draggable="true" ondragstart="{!c.startDrag}">
         <div class="slds-m-around--small" ondrop="{!c.onDrop}">
             <lightning:layout multipleRows="true" horizontalAlign="spread">
                 <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
