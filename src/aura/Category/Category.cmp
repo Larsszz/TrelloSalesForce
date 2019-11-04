@@ -10,10 +10,11 @@
     <aura:registerEvent name="deleteEvent" type="c:CategoryDelete"/>
     <aura:handler name="dragTask" event="c:dragTask" action="{!c.deleteByDrop}"/>
     <aura:handler name="changePosition" event="c:changePositionEvent" action="{!c.setPosition}"/>
-    <aura:handler event="c:correctlyDelete" action="{!c.correctlyDelete}" />
+    <aura:handler event="c:correctlyDelete" action="{!c.correctlyDelete}"/>
+    <aura:handler name="deleteTaskEvent" event="c:deleteTaskEvent" action="{!c.deleteTask}"/>
 
     <div class="slds-box_border" draggable="true" ondragstart="{!c.startDrag}">
-        <div class="slds-m-around--small" ondrop="{!c.onDrop}">
+        <div class="slds-m-around--small" ondrop="{!c.onDrop}" ondragover="{!c.setApprovePosition}">
             <lightning:layout multipleRows="true" horizontalAlign="spread">
                 <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
                 <lightning:layout>
@@ -33,16 +34,12 @@
                 <lightning:button class="slds-button_stretch" label="Add Task" variant="neutral"
                                   onclick="{!c.showHideTask}"/>
             </div>
-
             <div class="slds-hide" aura:id="inputTask">
                 <lightning:input label="Task Name" type="text" aura:id="inputTaskName"/>
                 <lightning:input type="text" label="Task Description" aura:id="inputTaskDescription"/>
                 <lightning:button label="Add task" variant="success" onclick="{!c.addTask}"/>
             </div>
-
-
         </div>
-
     </div>
 
 </aura:component>

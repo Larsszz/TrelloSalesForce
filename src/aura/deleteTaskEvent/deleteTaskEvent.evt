@@ -1,0 +1,7 @@
+<!--
+ - Created by IlarionTokarskyi on 11/4/2019.
+ -->
+
+<aura:event type="COMPONENT" description="deleteTaskEvent">
+    <aura:attribute name="task" type="TaskBoard__c"/>
+</aura:event>

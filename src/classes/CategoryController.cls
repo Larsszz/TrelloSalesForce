@@ -15,7 +15,7 @@ public with sharing class CategoryController {
     public static TaskBoard__c addTaskByInput(String name, String description, String idCategory) {
         TaskBoard__c task = new TaskBoard__c(Name = name, Description__c = description, Category__c = idCategory);
         List<AggregateResult> results = [SELECT MAX(Position__c) maxx FROM TaskBoard__c WHERE Category__c = :idCategory];
-        if (results[0].get('maxx')==null) {
+        if (results[0].get('maxx') == null) {
             task.Position__c = 0;
         } else {
             task.Position__c = Integer.valueOf(results[0].get('maxx')) + 1;
@@ -43,5 +43,10 @@ public with sharing class CategoryController {
             }
         }
         update toUpdate;
+    }
+
+    @AuraEnabled
+    public static void deleteTaskFromModal(TaskBoard__c taskBoard) {
+        delete taskBoard;
     }
 }

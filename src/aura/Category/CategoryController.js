@@ -54,12 +54,11 @@
         $A.enqueueAction(action);
     },
 
-    allowDrop: function (component, event, helper) {
-        event.preventDefault();
+    setApprovePosition: function (component, event, helper) {
+        component.set("v.approvePosition", false);
     },
 
     onDrop: function (component, event, helper) {
-        //event.preventDefault();
         let tasks = component.get("v.tasks");
         let index = component.get("v.positionToTask");
         let taskToAdd = JSON.parse(event.dataTransfer.getData('task'));
@@ -71,7 +70,7 @@
             component.set("v.tasks", [taskToAdd]);
         }
         let action = component.get("c.updateTaskCategory");
-        action.setParams({"task": taskToAdd, "category": component.get("v.category"),"position":index});
+        action.setParams({"task": taskToAdd, "category": component.get("v.category"), "position": index});
         $A.enqueueAction(action);
     },
 
@@ -90,13 +89,31 @@
         component.set("v.positionToTask", index);
     },
 
-    correctlyDelete : function (component, event, helper) {
+    correctlyDelete: function (component, event, helper) {
         component.set("v.approvePosition", true);
     },
 
-    startDrag : function (component, event, helper) {
+    startDrag: function (component, event, helper) {
         event.dataTransfer.dropEffect = "move";
         let category = component.get("v.category");
         event.dataTransfer.setData('category', JSON.stringify(category));
+    },
+
+    deleteTask: function (component, event, helper) {
+        let tasks = component.get("v.tasks");
+        let task = event.getParam("task");
+        let index = -1;
+        for (let i = 0; i < tasks.length; i++) {
+            if (JSON.stringify(tasks[i])===JSON.stringify(task)) {
+                index = i;
+            }
+        }
+        if (index > -1) {
+            tasks.splice(index, 1);
+            component.set("v.tasks", tasks);
+        }
+        let action = component.get("c.deleteTaskFromModal");
+        action.setParams({"taskBoard":task});
+        $A.enqueueAction(action);
     }
 });

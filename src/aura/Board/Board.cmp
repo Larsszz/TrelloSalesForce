@@ -2,13 +2,15 @@
  - Created by IlarionTokarskyi on 10/25/2019.
  -->
 
-<aura:component controller="BoardController" description="Board" implements="force:lightningQuickAction,force:hasRecordId,flexipage:availableForAllPageTypes" access="global">
+<aura:component controller="BoardController" description="Board"
+                implements="force:lightningQuickAction,force:hasRecordId,flexipage:availableForAllPageTypes"
+                access="global">
     <aura:attribute name="recordId" type="String"/>
     <aura:attribute name="board" type="Board__c"/>
     <aura:attribute name="categories" type="Category__c[]"/>
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="deleteEvent" event="c:CategoryDelete" action="{!c.deleteStage}"/>
-    <aura:handler name="changeCategoryPosition" event="c:changeCategoryPosition" action="{!c.changeCategoryPosition}" />
+    <aura:handler name="changeCategoryPosition" event="c:changeCategoryPosition" action="{!c.changeCategoryPosition}"/>
 
     <lightning:layoutItem size="3" class="slds-m-around--small">
         <div aura:id="toHide" class="slds-hide">
@@ -19,10 +21,8 @@
                           variant="brand"/>
     </lightning:layoutItem>
 
-
     <lightning:layout multipleRows="true" verticalAlign="start">
         <aura:iteration items="{!v.categories}" var="category" indexVar="index">
-
             <c:verticalDropDiv index="{!index}"/>
             <lightning:layoutItem flexibility="grow" size="2">
                 <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
@@ -32,6 +32,4 @@
         <c:verticalDropDiv index="{!v.categories.length}"/>
 
     </lightning:layout>
-
-
 </aura:component>

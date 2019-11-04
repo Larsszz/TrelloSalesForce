@@ -35,9 +35,12 @@
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 let categories = component.get("v.categories");
-                categories.push(response.getReturnValue());
-                component.set("v.categories", categories);
-
+                if (categories === undefined) {
+                    component.set("v.categories", [response.getReturnValue()]);
+                } else {
+                    categories.push(response.getReturnValue());
+                    component.set("v.categories", categories);
+                }
             } else {
                 console.log('Failed create stage with state:  ' + response.getState());
             }

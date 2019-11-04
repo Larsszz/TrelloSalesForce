@@ -2,13 +2,26 @@
  - Created by IlarionTokarskyi on 10/25/2019.
  -->
 
-<aura:component description="Task">
-    <aura:attribute name="task" type="TaskBoard__c" />
-    <aura:attribute name="index" type="Integer" />
+<aura:component description="Task" controller="TaskBoardController">
+    <aura:attribute name="task" type="TaskBoard__c"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:attribute name="modalBoxIsOpen" type="Boolean" default="false"/>
     <aura:registerEvent name="dragTask" type="c:dragTask"/>
-    <div draggable="true" class="slds-box_border" ondragstart="{!c.startDrag}" ondragend="{!c.endDrag}">
+    <aura:handler name="closeModalEvent" event="c:closeModalEvent" action="{!c.closeModalBox}"/>
+    <aura:handler name="editTaskNameEvent" event="c:editTaskNameEvent" action="{!c.editName}"/>
+    <aura:handler name="editTaskDescriptionEvent" event="c:editTaskDescriptionEvent" action="{!c.editDescription}"/>
+
+    <aura:if isTrue="{!v.modalBoxIsOpen}">
+        <c:TaskModalBox task="{!v.task}"/>
+    </aura:if>
+
+    <div draggable="true" class="slds-box_border" ondragstart="{!c.startDrag}" ondragend="{!c.endDrag}"
+         onclick="{!c.openModalBox}">
+
+
         <div class="slds-m-around--medium">
-            <lightning:formattedText value="{!v.task.Name}" /><br/>
+            <lightning:formattedText value="{!v.task.Name}"/>
+            <br/>
         </div>
         <div class="slds-m-around--small">
             <lightning:formattedText value="{!v.task.Description__c}"/>

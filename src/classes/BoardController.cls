@@ -33,7 +33,8 @@ public with sharing class BoardController {
         List<Category__c> toUpdate = [
                 SELECT Position__c
                 FROM Category__c
-                WHERE Board__c = :category.Board__c AND Id != :category.Id
+                WHERE Board__c = :category.Board__c
+                AND Id != :category.Id
                 ORDER BY Position__c
         ];
         for (Integer i = 0; i < toUpdate.size(); i++) {
