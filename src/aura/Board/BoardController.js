@@ -16,6 +16,12 @@
             }
         });
         $A.enqueueAction(action);
+        const empApi = component.find('empApi');
+        const replayId = -1;
+        empApi.subscribe('/event/Change_board__e', replayId, $A.getCallback(eventReceived => {
+            let action = component.get("c.doInit");
+            $A.enqueueAction(action);
+        }));
     },
 
     showHideAddStage: function (component, event, helper) {
@@ -46,6 +52,10 @@
             }
         });
         $A.enqueueAction(action);
+        action = component.get("c.showHideAddStage");
+        $A.enqueueAction(action);
+        let input = component.find("inputStage");
+        input.set("v.value","");
 
     },
 
@@ -71,6 +81,7 @@
         let categories = component.get("v.categories");
         let index = event.getParam("index");
         let categoryToUpdate = event.getParam("category");
+        if (categoryToUpdate.Position__c===index) return;
         let oldIndex = -1;
         for (let i = 0; i < categories.length; i++) {
             if (JSON.stringify(categoryToUpdate) === JSON.stringify(categories[i])) {
@@ -79,6 +90,7 @@
         }
         categories.splice(oldIndex, 1);
         if (index >= oldIndex) index = index - 1;
+        categoryToUpdate.Position__c = index;
         categories.splice(index, 0, categoryToUpdate);
         component.set("v.categories", categories);
         let action = component.get("c.updateCategoriesPosition");

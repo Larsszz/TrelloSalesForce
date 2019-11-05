@@ -7,7 +7,7 @@ public with sharing class BoardController {
     public static List<Category__c> getNewBoard(String id) {
         return [
                 SELECT Id, Name, Position__c, Board__c, (
-                        SELECT Name, Description__c, Position__c
+                        SELECT Name, Description__c, Position__c, Priority__c
                         FROM TasksBoard__r
                         ORDER BY Position__c
                 )
@@ -28,6 +28,9 @@ public with sharing class BoardController {
 
     @AuraEnabled
     public static void updateCategoriesPosition(Category__c category, Integer position) {
+        if (category.Position__c == position) {
+            return;
+        }
         category.Position__c = position;
         update category;
         List<Category__c> toUpdate = [

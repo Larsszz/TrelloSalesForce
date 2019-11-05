@@ -2,12 +2,16 @@
  - Created by IlarionTokarskyi on 11/1/2019.
  -->
 
-<aura:component description="TaskModalBox" controller="TaskBoardController">
+<aura:component description="TaskModalBox" controller="TaskBoardController" access="global">
     <aura:attribute name="task" type="TaskBoard__c"/>
+    <aura:attribute name="priorities" type="String[]"/>
     <aura:registerEvent name="closeModalEvent" type="c:closeModalEvent"/>
     <aura:registerEvent name="editTaskNameEvent" type="c:editTaskNameEvent"/>
     <aura:registerEvent name="editTaskDescriptionEvent" type="c:editTaskDescriptionEvent"/>
     <aura:registerEvent name="deleteTaskEvent" type="c:deleteTaskEvent"/>
+    <aura:registerEvent name="deletePriorityEvent" type="c:deletePriorityEvent"/>
+    <aura:registerEvent name="addPriorityEvent" type="c:addPriorityEvent"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <section role="dialog" tabindex="0"
              aria-labelledby="modal-heading-01"
              aria-modal="true"
@@ -58,6 +62,19 @@
                                       onclick="{!c.startEditDescription}"/>
                     <lightning:button aura:id="newDescriptionButton" label="Edit" variant="success" class="slds-hide"
                                       onclick="{!c.endEditDescription}"/>
+                </lightning:layout>
+                <lightning:layout class="slds-m-around--small" horizontalAlign="spread">
+                    <lightning:formattedText value="Edit priority: " class="slds-text-heading--label-normal"/>
+                    <lightning:button aura:id="vhButton" label="{!$Label.c.Very_High_Priority}" variant="brand"
+                                      onclick="{!c.addRemovePriority}"/>
+                    <lightning:button aura:id="hButton" label="{!$Label.c.High_Priority}" variant="brand"
+                                      onclick="{!c.addRemovePriority}"/>
+                    <lightning:button aura:id="nButton" label="{!$Label.c.Normal_Priority}" variant="brand"
+                                      onclick="{!c.addRemovePriority}"/>
+                    <lightning:button aura:id="lButton" label="{!$Label.c.Low_Priority}" variant="brand"
+                                      onclick="{!c.addRemovePriority}"/>
+                    <lightning:button aura:id="vlButton" label="{!$Label.c.Very_Low_Priority}" variant="brand"
+                                      onclick="{!c.addRemovePriority}"/>
                 </lightning:layout>
 
 

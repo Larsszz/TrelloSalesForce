@@ -1,0 +1,10 @@
+<!--
+ - Created by IlarionTokarskyi on 11/4/2019.
+ -->
+
+<aura:component description="priorityComponent">
+    <aura:attribute name="priority" type="String"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <div aura:id="div">
+    </div>
+</aura:component>

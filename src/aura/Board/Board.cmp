@@ -12,6 +12,7 @@
     <aura:handler name="deleteEvent" event="c:CategoryDelete" action="{!c.deleteStage}"/>
     <aura:handler name="changeCategoryPosition" event="c:changeCategoryPosition" action="{!c.changeCategoryPosition}"/>
 
+    <lightning:empApi aura:id="empApi" />
     <lightning:layoutItem size="3" class="slds-m-around--small">
         <div aura:id="toHide" class="slds-hide">
             <lightning:input aura:id="inputStage" label="Stage Name" type="text" variant="standard" required="true"/>
@@ -21,15 +22,19 @@
                           variant="brand"/>
     </lightning:layoutItem>
 
-    <lightning:layout multipleRows="true" verticalAlign="start">
+    <lightning:layout multipleRows="true">
         <aura:iteration items="{!v.categories}" var="category" indexVar="index">
-            <c:verticalDropDiv index="{!index}"/>
-            <lightning:layoutItem flexibility="grow" size="2">
-                <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
+
+            <lightning:layoutItem flexibility="grow" size="2" largeDeviceSize="2" mediumDeviceSize="3" smallDeviceSize="6">
+                <lightning:layout multipleRows="true" verticalAlign="start">
+                    <c:verticalDropDiv index="{!index}"/>
+                    <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
+                </lightning:layout>
             </lightning:layoutItem>
         </aura:iteration>
 
         <c:verticalDropDiv index="{!v.categories.length}"/>
 
     </lightning:layout>
+
 </aura:component>

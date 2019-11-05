@@ -55,6 +55,18 @@
                       <option name="wildcard" value="false" />
                     </MetadataType>
                     <MetadataType>
+                      <option name="entries">
+                        <list>
+                          <MetadataEntry>
+                            <option name="name" value="CategoryTrigger" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="TaskBoardTrigger" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                        </list>
+                      </option>
                       <option name="name" value="ApexTrigger" />
                     </MetadataType>
                     <MetadataType>
@@ -107,6 +119,10 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
+                            <option name="name" value="addPriorityEvent" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="Board" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -139,6 +155,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="deletePriorityEvent" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="deleteTaskEvent" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -159,11 +179,19 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="priorityComponent" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="Task" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="TaskModalBox" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="testStreamComponent" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>

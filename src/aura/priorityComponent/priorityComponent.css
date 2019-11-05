@@ -1,0 +1,38 @@
+/**
+ * Created by IlarionTokarskyi on 11/4/2019.
+ */
+
+.THIS.very_high {
+    height: 10px;
+    width: 20px;
+    background: firebrick;
+    border-radius: 25px;
+}
+
+.THIS.high {
+    height: 10px;
+    width: 20px;
+    background: darkorange;
+    border-radius: 25px;
+}
+
+.THIS.normal {
+    height: 10px;
+    width: 20px;
+    background: yellow;
+    border-radius: 25px;
+}
+
+.THIS.low {
+    height: 10px;
+    width: 20px;
+    background: forestgreen;
+    border-radius: 25px;
+}
+
+.THIS.very_low {
+    height: 10px;
+    width: 20px;
+    background: grey;
+    border-radius: 25px;
+}

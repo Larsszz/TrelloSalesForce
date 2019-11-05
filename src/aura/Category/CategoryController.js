@@ -52,6 +52,10 @@
             }
         });
         $A.enqueueAction(action);
+        action = component.get("c.showHideTask");
+        $A.enqueueAction(action);
+        component.find("inputTaskName").set("v.value","");
+        component.find("inputTaskDescription").set("v.value","");
     },
 
     setApprovePosition: function (component, event, helper) {

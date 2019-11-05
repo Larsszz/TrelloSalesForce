@@ -1,0 +1,7 @@
+<!--
+ - Created by IlarionTokarskyi on 11/4/2019.
+ -->
+
+<aura:event type="COMPONENT" description="deletePriorityEvent">
+    <aura:attribute name="priority" type="String"/>
+</aura:event>
