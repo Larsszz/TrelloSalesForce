@@ -34,7 +34,6 @@ public with sharing class TaskBoardController {
         task.Priority__c = '';
         for (String str: oldPriorities) {
             task.Priority__c += str + ';';
-
         }
         task.Priority__c = task.Priority__c.removeEnd(';');
         update task;

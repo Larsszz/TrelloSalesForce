@@ -5,8 +5,17 @@
 public with sharing class CategoryController {
     @AuraEnabled
     public static void deleteCategoryById(String id) {
-        Category__c toDelete = [SELECT Id, Name FROM Category__c WHERE Id = :id];
-        List<TaskBoard__c> tasksToDelete = [SELECT Id FROM TaskBoard__c WHERE Category__c = :id];
+        Category__c toDelete = [
+                SELECT Id,
+                        Name
+                FROM Category__c
+                WHERE Id = :id
+        ];
+        List<TaskBoard__c> tasksToDelete = [
+                SELECT Id
+                FROM TaskBoard__c
+                WHERE Category__c = :id
+        ];
         delete toDelete;
         delete tasksToDelete;
     }
@@ -14,7 +23,11 @@ public with sharing class CategoryController {
     @AuraEnabled
     public static TaskBoard__c addTaskByInput(String name, String description, String idCategory) {
         TaskBoard__c task = new TaskBoard__c(Name = name, Description__c = description, Category__c = idCategory);
-        List<AggregateResult> results = [SELECT MAX(Position__c) maxx FROM TaskBoard__c WHERE Category__c = :idCategory];
+        List<AggregateResult> results = [
+                SELECT MAX(Position__c) maxx
+                FROM TaskBoard__c
+                WHERE Category__c = :idCategory
+        ];
         if (results[0].get('maxx') == null) {
             task.Position__c = 0;
         } else {
@@ -35,13 +48,14 @@ public with sharing class CategoryController {
                 WHERE Category__c = :category.Id AND Id != :task.Id
                 ORDER BY Position__c
         ];
-        for (Integer i = 0; i < toUpdate.size(); i++) {
-            if (toUpdate[i].Position__c < position) {
-                toUpdate[i].Position__c = i;
-            } else {
-                toUpdate[i].Position__c = i + 1;
-            }
-        }
+        toUpdate = BoardUtilities.updateObjectsInListPosition(toUpdate, position);
+//        for (Integer i = 0; i < toUpdate.size(); i++) {
+//            if (toUpdate[i].Position__c < position) {
+//                toUpdate[i].Position__c = i;
+//            } else {
+//                toUpdate[i].Position__c = i + 1;
+//            }
+//        }
         update toUpdate;
     }
 

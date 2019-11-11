@@ -3,5 +3,5 @@
  */
 
 trigger TaskBoardTrigger on TaskBoard__c (after insert, after update, after delete) {
-    EventBus.publish(new Change_board__e());
+    //EventBus.publish(new Change_board__e());
 }

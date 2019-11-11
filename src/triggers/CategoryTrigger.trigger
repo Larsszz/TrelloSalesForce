@@ -3,5 +3,19 @@
  */
 
 trigger CategoryTrigger on Category__c (after insert, after update, after delete) {
-    EventBus.publish(new Change_board__e());
+    if (Trigger.isInsert) {
+        if (Trigger.isAfter) {
+            CategoryTriggerHandler.isAfterInsert();
+        }
+    }
+    if (Trigger.isUpdate) {
+        if (Trigger.isAfter) {
+            CategoryTriggerHandler.isAfterUpdate();
+        }
+    }
+    if (Trigger.isDelete) {
+        if (Trigger.isAfter) {
+            CategoryTriggerHandler.isAfterDelete();
+        }
+    }
 }

@@ -20,7 +20,11 @@ public with sharing class BoardController {
     @AuraEnabled
     public static Category__c crateNewCategory(String id, String name) {
         Category__c category = new Category__c(Name = name, Board__c = id);
-        List<AggregateResult> results = [SELECT MAX(Position__c) maxx FROM Category__c WHERE Board__c = :id];
+        List<AggregateResult> results = [
+                SELECT MAX(Position__c) maxx
+                FROM Category__c
+                WHERE Board__c = :id
+        ];
         category.Position__c = Integer.valueOf(results[0].get('maxx')) + 1;
         insert category;
         return category;
@@ -28,9 +32,6 @@ public with sharing class BoardController {
 
     @AuraEnabled
     public static void updateCategoriesPosition(Category__c category, Integer position) {
-        if (category.Position__c == position) {
-            return;
-        }
         category.Position__c = position;
         update category;
         List<Category__c> toUpdate = [
@@ -40,13 +41,7 @@ public with sharing class BoardController {
                 AND Id != :category.Id
                 ORDER BY Position__c
         ];
-        for (Integer i = 0; i < toUpdate.size(); i++) {
-            if (toUpdate[i].Position__c < position) {
-                toUpdate[i].Position__c = i;
-            } else {
-                toUpdate[i].Position__c = i + 1;
-            }
-        }
+        toUpdate = BoardUtilities.updateObjectsInListPosition(toUpdate,position);
         update toUpdate;
     }
 }
