@@ -52,15 +52,9 @@ public with sharing class CategoryController {
             toUpdate.add(position, task);
         }
         for (Integer i = 0; i < toUpdate.size(); i++) {
-            if (toUpdate[i].Position__c < position) {
-                toUpdate[i].Position__c = i;
-            } else if (toUpdate[i].Position__c == position) {
-                if (toUpdate[i] == task) {
-                    task.Category__c = category.Id;
-                    task.Position__c = position;
-                } else {
-                    toUpdate[i].Position__c = i;
-                }
+            if (toUpdate[i] == task) {
+                task.Category__c = category.Id;
+                task.Position__c = position;
             } else {
                 toUpdate[i].Position__c = i;
             }

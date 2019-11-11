@@ -39,20 +39,14 @@ public with sharing class BoardController {
                 AND Id != :category.Id
                 ORDER BY Position__c
         ];
-        if (position==toUpdate.size()) {
+        if (position == toUpdate.size()) {
             toUpdate.add(category);
         } else {
             toUpdate.add(position, category);
         }
         for (Integer i = 0; i < toUpdate.size(); i++) {
-            if (toUpdate[i].Position__c < position) {
-                toUpdate[i].Position__c = i;
-            } else if (toUpdate[i].Position__c == position) {
-                if (toUpdate[i] == category) {
-                    category.Position__c = position;
-                } else {
-                    toUpdate[i].Position__c = i;
-                }
+            if (toUpdate[i] == category) {
+                category.Position__c = position;
             } else {
                 toUpdate[i].Position__c = i;
             }
