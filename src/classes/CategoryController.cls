@@ -39,23 +39,32 @@ public with sharing class CategoryController {
 
     @AuraEnabled
     public static void updateTaskCategory(TaskBoard__c task, Category__c category, Integer position) {
-        task.Category__c = category.Id;
-        task.Position__c = position;
-        update task;
+
         List<TaskBoard__c> toUpdate = [
                 SELECT Id, Position__c
                 FROM TaskBoard__c
                 WHERE Category__c = :category.Id AND Id != :task.Id
                 ORDER BY Position__c
         ];
-        toUpdate = BoardUtilities.updateObjectsInListPosition(toUpdate, position);
-//        for (Integer i = 0; i < toUpdate.size(); i++) {
-//            if (toUpdate[i].Position__c < position) {
-//                toUpdate[i].Position__c = i;
-//            } else {
-//                toUpdate[i].Position__c = i + 1;
-//            }
-//        }
+        if (position == toUpdate.size()) {
+            toUpdate.add(task);
+        } else {
+            toUpdate.add(position, task);
+        }
+        for (Integer i = 0; i < toUpdate.size(); i++) {
+            if (toUpdate[i].Position__c < position) {
+                toUpdate[i].Position__c = i;
+            } else if (toUpdate[i].Position__c == position) {
+                if (toUpdate[i] == task) {
+                    task.Category__c = category.Id;
+                    task.Position__c = position;
+                } else {
+                    toUpdate[i].Position__c = i;
+                }
+            } else {
+                toUpdate[i].Position__c = i;
+            }
+        }
         update toUpdate;
     }
 

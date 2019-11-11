@@ -32,8 +32,6 @@ public with sharing class BoardController {
 
     @AuraEnabled
     public static void updateCategoriesPosition(Category__c category, Integer position) {
-        category.Position__c = position;
-        update category;
         List<Category__c> toUpdate = [
                 SELECT Position__c
                 FROM Category__c
@@ -41,7 +39,24 @@ public with sharing class BoardController {
                 AND Id != :category.Id
                 ORDER BY Position__c
         ];
-        toUpdate = BoardUtilities.updateObjectsInListPosition(toUpdate,position);
+        if (position==toUpdate.size()) {
+            toUpdate.add(category);
+        } else {
+            toUpdate.add(position, category);
+        }
+        for (Integer i = 0; i < toUpdate.size(); i++) {
+            if (toUpdate[i].Position__c < position) {
+                toUpdate[i].Position__c = i;
+            } else if (toUpdate[i].Position__c == position) {
+                if (toUpdate[i] == category) {
+                    category.Position__c = position;
+                } else {
+                    toUpdate[i].Position__c = i;
+                }
+            } else {
+                toUpdate[i].Position__c = i;
+            }
+        }
         update toUpdate;
     }
 }
