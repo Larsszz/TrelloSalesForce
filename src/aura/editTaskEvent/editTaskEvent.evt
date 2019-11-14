@@ -1,0 +1,10 @@
+<!--
+ - Created by IlarionTokarskyi on 11/12/2019.
+ -->
+
+<aura:event type="COMPONENT" description="editTaskEvent">
+    <aura:attribute name="task" type="TaskBoard__c"/>
+    <aura:attribute name="name" type="String"/>
+    <aura:attribute name="description" type="String"/>
+    <aura:attribute name="priorities" type="String[]"/>
+</aura:event>

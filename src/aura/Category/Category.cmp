@@ -13,7 +13,7 @@
     <aura:handler event="c:correctlyDelete" action="{!c.correctlyDelete}"/>
     <aura:handler name="deleteTaskEvent" event="c:deleteTaskEvent" action="{!c.deleteTask}"/>
 
-    <div class="slds-box_border" draggable="true" ondragstart="{!c.startDrag}">
+    <div class="slds-box_border slds-m-bottom--medium" draggable="true" ondragstart="{!c.startDrag}">
         <div class="slds-m-around--small" ondrop="{!c.onDrop}" ondragover="{!c.setApprovePosition}">
             <lightning:layout multipleRows="true" horizontalAlign="spread">
                 <lightning:formattedText value="{!v.category.Name}" class="slds-text-heading_label"/>
@@ -31,7 +31,7 @@
             </aura:iteration>
             <c:dropDiv index="{!v.tasks.length}"/>
             <div class="slds-m-around--small">
-                <lightning:button class="slds-button_stretch" label="Add Task" variant="neutral"
+                <lightning:button aura:id="addButton" class="slds-button_stretch" label="Add Task" variant="neutral"
                                   onclick="{!c.showHideTask}"/>
             </div>
             <div class="slds-hide" aura:id="inputTask">

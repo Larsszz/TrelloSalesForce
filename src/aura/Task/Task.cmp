@@ -10,16 +10,13 @@
     <aura:registerEvent name="dragTask" type="c:dragTask"/>
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="closeModalEvent" event="c:closeModalEvent" action="{!c.closeModalBox}"/>
-    <aura:handler name="editTaskNameEvent" event="c:editTaskNameEvent" action="{!c.editName}"/>
-    <aura:handler name="editTaskDescriptionEvent" event="c:editTaskDescriptionEvent" action="{!c.editDescription}"/>
-    <aura:handler name="addPriorityEvent" event="c:addPriorityEvent" action="{!c.addPriority}"/>
-    <aura:handler name="deletePriorityEvent" event="c:deletePriorityEvent" action="{!c.deletePriority}"/>
+    <aura:handler name="editTaskEvent" event="c:editTaskEvent" action="{!c.updateTask}"/>
 
     <aura:if isTrue="{!v.modalBoxIsOpen}">
         <c:TaskModalBox task="{!v.task}" priorities="{!v.priorities}"/>
     </aura:if>
 
-    <div draggable="true" class="slds-box_border" ondragstart="{!c.startDrag}" ondragend="{!c.endDrag}"
+    <div draggable="true" class="slds-box_border standart-size" ondragstart="{!c.startDrag}" ondragend="{!c.endDrag}"
          onclick="{!c.openModalBox}">
 
 

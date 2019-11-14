@@ -187,6 +187,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="editTaskEvent" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="editTaskNameEvent" />
                             <option name="selected" value="true" />
                           </MetadataEntry>

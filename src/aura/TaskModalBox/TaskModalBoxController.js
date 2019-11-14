@@ -8,60 +8,33 @@
         action.fire();
     },
 
-    startEditName: function (component, event, helper) {
+    startEditTask: function (component, event, helper) {
         let oldName = component.find("oldNameField");
-        let oldButton = component.find("oldNameButton");
         let newName = component.find("newNameField");
-        let newButton = component.find("newNameButton");
-        $A.util.addClass(oldName, "slds-hide");
-        $A.util.addClass(oldButton, "slds-hide");
-        $A.util.removeClass(newName, "slds-hide");
-        $A.util.removeClass(newButton, "slds-hide");
-    },
-
-    endEditName: function (component, event, helper) {
-        let oldName = component.find("oldNameField");
-        let oldButton = component.find("oldNameButton");
-        let newName = component.find("newNameField");
-        let newButton = component.find("newNameButton");
-        let action = component.get("c.updateTaskName");
-        action.setParams({"task": component.get("v.task"), "name": newName.get("v.value")});
-        $A.enqueueAction(action);
-        $A.util.addClass(newName, "slds-hide");
-        $A.util.addClass(newButton, "slds-hide");
-        $A.util.removeClass(oldName, "slds-hide");
-        $A.util.removeClass(oldButton, "slds-hide");
-        action = component.getEvent("editTaskNameEvent");
-        action.setParams({"name": newName.get("v.value")});
-        action.fire();
-    },
-
-    startEditDescription: function (component, event, helper) {
         let oldDescription = component.find("oldDescriptionField");
-        let oldButton = component.find("oldDescriptionButton");
         let newDescription = component.find("newDescriptionField");
-        let newButton = component.find("newDescriptionButton");
-        $A.util.addClass(oldDescription, "slds-hide");
-        $A.util.addClass(oldButton, "slds-hide");
-        $A.util.removeClass(newDescription, "slds-hide");
-        $A.util.removeClass(newButton, "slds-hide");
-    },
+        let buttons = component.find('labelButtons');
+        let button = event.getSource();
+        if (button.get("v.label") === "Edit") {
+            $A.util.removeClass(buttons, "slds-hide");
+            $A.util.addClass(oldName, "slds-hide");
+            $A.util.removeClass(newName, "slds-hide");
+            $A.util.addClass(oldDescription, "slds-hide");
+            $A.util.removeClass(newDescription, "slds-hide");
+            button.set('v.label', 'Save');
+        } else if (button.get("v.label") === "Save") {
+            let action = component.getEvent('editTaskEvent');
+            action.setParams({
+                'task': component.get('v.task'),
+                'name': newName.get('v.value'),
+                'description': newDescription.get('v.value'),
+                'priorities': component.get('v.priorities')
+            });
+            action.fire();
+            action = component.getEvent("closeModalEvent");
+            action.fire();
+        }
 
-    endEditDescription: function (component, event, helper) {
-        let oldDescription = component.find("oldDescriptionField");
-        let oldButton = component.find("oldDescriptionButton");
-        let newDescription = component.find("newDescriptionField");
-        let newButton = component.find("newDescriptionButton");
-        $A.util.addClass(newDescription, "slds-hide");
-        $A.util.addClass(newButton, "slds-hide");
-        $A.util.removeClass(oldDescription, "slds-hide");
-        $A.util.removeClass(oldButton, "slds-hide");
-        let action = component.get("c.updateTaskDescription");
-        action.setParams({"task": component.get("v.task"), "description": newDescription.get("v.value")});
-        $A.enqueueAction(action);
-        action = component.getEvent("editTaskDescriptionEvent");
-        action.setParams({"description": newDescription.get("v.value")});
-        action.fire();
     },
 
     deleteTask: function (component, event, helper) {
@@ -75,19 +48,19 @@
     doInit: function (component, event, helper) {
         let priorities = component.get("v.priorities");
         for (let i = 0; i < priorities.length; i++) {
-            if (priorities[i] === "Very High") {
+            if (priorities[i] === "Urgent") {
                 let button = component.find("vhButton");
                 button.set("v.variant", "neutral");
-            } else if (priorities[i] === "High") {
+            } else if (priorities[i] === "Client Request") {
                 let button = component.find("hButton");
                 button.set("v.variant", "neutral");
-            } else if (priorities[i] === "Normal") {
+            } else if (priorities[i] === "OS Task") {
                 let button = component.find("nButton");
                 button.set("v.variant", "neutral");
-            } else if (priorities[i] === "Low") {
+            } else if (priorities[i] === "New Project") {
                 let button = component.find("lButton");
                 button.set("v.variant", "neutral");
-            } else if (priorities[i] === "Very Low") {
+            } else if (priorities[i] === "Stopped") {
                 let button = component.find("vlButton");
                 button.set("v.variant", "neutral");
             }
@@ -97,16 +70,20 @@
 
     addRemovePriority: function (component, event, helper) {
         let button = event.getSource();
-        if (button.get("v.variant")==="brand") {
-            let action = component.getEvent("addPriorityEvent");
-            action.setParams({"priority":button.get("v.label")});
-            action.fire();
-            button.set("v.variant","neutral");
+        let priorities = component.get('v.priorities');
+        if (button.get("v.variant") === "brand") {
+            if (priorities === undefined) {
+                component.set('v.priorities', [button.get('v.label')]);
+            } else {
+                priorities.push(button.get("v.label"));
+                component.set('v.priorities', priorities);
+            }
+            button.set('v.variant','neutral');
         } else {
-            let action = component.getEvent("deletePriorityEvent");
-            action.setParams({"priority":button.get("v.label")});
-            action.fire();
-            button.set("v.variant","brand");
+            let index = priorities.indexOf(button.get('v.label'));
+            priorities.splice(index,1);
+            button.set('v.variant', 'brand');
+            component.set('v.priorities', priorities);
         }
     }
 });

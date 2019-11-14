@@ -6,3 +6,9 @@
     background-color: #195594;
     color: aliceblue;
 }
+
+.THIS.standart-size {
+    height: auto;
+    min-height: 100px;
+    width: 180px;
+}

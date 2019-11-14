@@ -33,10 +33,13 @@
 
     showHideAddStage: function (component, event, helper) {
         let element = component.find("toHide");
+        let label = component.find('addButton');
         if ($A.util.hasClass(element, "slds-hide")) {
             $A.util.removeClass(element, "slds-hide");
+            label.set('v.label', 'Close');
         } else {
             $A.util.addClass(element, "slds-hide");
+            label.set('v.label', 'Add Stage');
         }
     },
 
@@ -73,11 +76,9 @@
         console.log(categories.length);
         for (let i = 0; i < categories.length; i++) {
             if (Object.values(category)[0] === Object.values(categories[i])[0]) {
-                console.log(categories[i]);
                 index = i;
             }
         }
-        console.log(index);
         if (index > -1) {
             categories.splice(index, 1);
             component.set("v.categories", categories);
@@ -105,8 +106,6 @@
             categories.splice(index, 0, categoryToUpdate);
             component.set("v.categories", categories);
         }
-
-
     }
 
 

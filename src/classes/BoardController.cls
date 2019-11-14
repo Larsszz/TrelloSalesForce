@@ -6,8 +6,14 @@ public with sharing class BoardController {
     @AuraEnabled
     public static List<Category__c> getNewBoard(String id) {
         return [
-                SELECT Id, Name, Position__c, Board__c, (
-                        SELECT Name, Description__c, Position__c, Priority__c
+                SELECT Id,
+                        Name,
+                        Position__c,
+                        Board__c, (
+                        SELECT Name,
+                                Description__c,
+                                Position__c,
+                                Priority__c
                         FROM TasksBoard__r
                         ORDER BY Position__c
                 )
@@ -21,11 +27,11 @@ public with sharing class BoardController {
     public static Category__c crateNewCategory(String id, String name) {
         Category__c category = new Category__c(Name = name, Board__c = id);
         List<AggregateResult> results = [
-                SELECT MAX(Position__c) maxx
+                SELECT MAX(Position__c) maxPosition
                 FROM Category__c
                 WHERE Board__c = :id
         ];
-        category.Position__c = Integer.valueOf(results[0].get('maxx')) + 1;
+        category.Position__c = Integer.valueOf(results[0].get('maxPosition')) + 1;
         insert category;
         return category;
     }

@@ -6,11 +6,8 @@
     <aura:attribute name="task" type="TaskBoard__c"/>
     <aura:attribute name="priorities" type="String[]"/>
     <aura:registerEvent name="closeModalEvent" type="c:closeModalEvent"/>
-    <aura:registerEvent name="editTaskNameEvent" type="c:editTaskNameEvent"/>
-    <aura:registerEvent name="editTaskDescriptionEvent" type="c:editTaskDescriptionEvent"/>
+    <aura:registerEvent name="editTaskEvent" type="c:editTaskEvent"/>
     <aura:registerEvent name="deleteTaskEvent" type="c:deleteTaskEvent"/>
-    <aura:registerEvent name="deletePriorityEvent" type="c:deletePriorityEvent"/>
-    <aura:registerEvent name="addPriorityEvent" type="c:addPriorityEvent"/>
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <section role="dialog" tabindex="0"
              aria-labelledby="modal-heading-01"
@@ -29,12 +26,7 @@
             </header>
 
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                <lightning:layout horizontalAlign="end">
-                    <lightning:buttonIcon iconName="utility:close"
-                                          onclick="{!c.deleteTask}"
-                                          alternativeText="Delete"
-                                          variant="bare" iconClass="slds-icon-action-delete"/>
-                </lightning:layout>
+
                 <lightning:formattedText value="Task Name:" class="slds-text-heading_label"/>
                 <br/>
                 <lightning:layout horizontalAlign="spread">
@@ -42,29 +34,23 @@
                                              class="slds-text-heading--large"/>
                     <lightning:input aura:id="newNameField" label="New Name" value="{!v.task.Name}" type="text"
                                      class="slds-hide"/>
-                    <lightning:button aura:id="oldNameButton" label="Edit" variant="brand"
-                                      onclick="{!c.startEditName}"/>
-                    <lightning:button aura:id="newNameButton" label="Edit" variant="success" class="slds-hide"
-                                      onclick="{!c.endEditName}"/>
                 </lightning:layout>
-                <br/><br/>
+                <br/>
                 <lightning:formattedText value="Task description:" class="slds-text-heading_label"/>
                 <br/>
-                <lightning:layout horizontalAlign="spread">
+                <lightning:layout horizontalAlign="spread" class="slds-m-bottom--medium">
                     <lightning:formattedText aura:id="oldDescriptionField" title="Description"
                                              value="{!v.task.Description__c}"
                                              class="slds-text-body_regular"/>
                     <lightning:input aura:id="newDescriptionField" label="New Description"
                                      value="{!v.task.Description__c}" type="text"
                                      class="slds-hide"/>
-                    <lightning:button aura:id="oldDescriptionButton" label="Edit" variant="brand"
-                                      class="slds-m-left_xx-large"
-                                      onclick="{!c.startEditDescription}"/>
-                    <lightning:button aura:id="newDescriptionButton" label="Edit" variant="success" class="slds-hide"
-                                      onclick="{!c.endEditDescription}"/>
                 </lightning:layout>
-                <lightning:layout class="slds-m-around--small" horizontalAlign="spread">
-                    <lightning:formattedText value="Edit priority: " class="slds-text-heading--label-normal"/>
+
+                <lightning:layout>
+                    <lightning:formattedText value="{!'Labels: ' + v.priorities}" class="slds-text-heading_label"/>
+                </lightning:layout>
+                <lightning:layout aura:id="labelButtons" horizontalAlign="space" class="slds-m-around--small slds-hide">
                     <lightning:button aura:id="vhButton" label="{!$Label.c.Very_High_Priority}" variant="brand"
                                       onclick="{!c.addRemovePriority}"/>
                     <lightning:button aura:id="hButton" label="{!$Label.c.High_Priority}" variant="brand"
@@ -81,10 +67,21 @@
             </div>
 
             <footer class="slds-modal__footer">
-                <lightning:button variant="brand"
-                                  label="Close"
-                                  title="Close"
-                                  onclick="{!c.closeModel}"/>
+                <lightning:layout horizontalAlign="spread">
+                    <lightning:button label="Delete" onclick="{!c.deleteTask}"
+                                      variant="destructive"/>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:button variant="brand"
+                                          label="Edit"
+                                          title="Edit"
+                                          onclick="{!c.startEditTask}"/>
+                        <lightning:button variant="brand"
+                                          label="Close"
+                                          title="Close"
+                                          onclick="{!c.closeModel}"/>
+                    </lightning:layout>
+                </lightning:layout>
+
             </footer>
         </div>
     </section>

@@ -18,14 +18,14 @@
             <lightning:input aura:id="inputStage" label="Stage Name" type="text" variant="standard" required="true"/>
             <lightning:button class="slds-m-around--small" label="Add" onclick="{!c.addStage}" variant="success"/>
         </div>
-        <lightning:button class="slds-m-around--small" onclick="{!c.showHideAddStage}" label="Add Stage"
+        <lightning:button aura:id="addButton" class="slds-m-around--small" onclick="{!c.showHideAddStage}" label="Add Stage"
                           variant="brand"/>
     </lightning:layoutItem>
 
     <lightning:layout multipleRows="true">
         <aura:iteration items="{!v.categories}" var="category" indexVar="index">
 
-            <lightning:layoutItem size="2" largeDeviceSize="2" mediumDeviceSize="3" smallDeviceSize="6">
+            <lightning:layoutItem size="2" largeDeviceSize="2" mediumDeviceSize="4" smallDeviceSize="6">
                 <lightning:layout multipleRows="true">
                     <c:verticalDropDiv index="{!index}"/>
                     <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>

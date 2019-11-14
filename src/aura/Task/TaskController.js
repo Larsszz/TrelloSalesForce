@@ -9,6 +9,9 @@
             let array = priority.split(';');
             component.set("v.priorities", array);
         }
+            // if (component.get("v.task.Name")==='reegege') {
+            //     console.log(priority);
+            // }
     },
 
     startDrag: function (component, event, helper) {
@@ -32,55 +35,19 @@
         component.set("v.modalBoxIsOpen", false);
     },
 
-    editName: function (component, event, helper) {
+    updateTask: function (component, event, helper) {
         let name = event.getParam("name");
-        let task = component.get("v.task");
-        task.Name = name;
-        component.set("v.task", task);
-    },
-
-    editDescription: function (component, event, helper) {
-        let description = event.getParam("description");
-        let task = component.get("v.task");
-        task.Description__c = description;
-        component.set("v.task", task);
-    },
-
-    addPriority: function (component, event, helper) {
-        let priority = event.getParam("priority");
-        let priors = component.get("v.priorities");
-        if (priors) {
-            priors.push(priority);
-            component.set("v.priorities",priors);
-        } else {
-            component.set("v.priorities",[priority]);
-        }
-        let action = component.get("c.addPriorityToTask");
-        action.setParams({"task":component.get("v.task"),"priority":priority});
+        let task = event.getParam('task');
+        let description = event.getParam('description');
+        let priorities = event.getParam('priorities');
+        let action = component.get('c.editTaskBoard');
+        action.setParams({'taskBoard': task, 'newName': name, 'newDescription': description, 'newPriorities': priorities});
         action.setCallback(this, function (response) {
             let state = response.getState();
             if (state === "SUCCESS") {
                 component.set("v.task", response.getReturnValue());
             } else {
-                console.log('Failed add Priority with state:  ' + state);
-            }
-        });
-        $A.enqueueAction(action);
-    },
-
-    deletePriority: function (component, event, helper) {
-        let priority = event.getParam("priority");
-        let priors = component.get("v.priorities");
-        priors.splice(priors.indexOf(priority),1);
-        component.set("v.priorities",priors);
-        let action = component.get("c.deletePriorityFromTask");
-        action.setParams({"task":component.get("v.task"),"priority":priority});
-        action.setCallback(this, function (response) {
-            let state = response.getState();
-            if (state === "SUCCESS") {
-                component.set("v.task", response.getReturnValue());
-            } else {
-                console.log('Failed delete Priority with state:  ' + state);
+                console.log('Failed update Task with state:  ' + state);
             }
         });
         $A.enqueueAction(action);

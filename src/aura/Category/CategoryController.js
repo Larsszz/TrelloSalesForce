@@ -24,9 +24,12 @@
 
     showHideTask: function (component, event, helper) {
         let element = component.find("inputTask");
+        let label = component.find('addButton');
         if ($A.util.hasClass(element, "slds-hide")) {
+            label.set('v.label', 'Close');
             $A.util.removeClass(element, "slds-hide");
         } else {
+            label.set('v.label', 'Add Task');
             $A.util.addClass(element, "slds-hide");
         }
     },
