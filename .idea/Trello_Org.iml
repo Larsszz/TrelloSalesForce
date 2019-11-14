@@ -2900,6 +2900,7 @@
             </option>
           </ModuleContents>
         </option>
+        <option name="packageName" value="MyPkg" />
       </configuration>
     </facet>
   </component>

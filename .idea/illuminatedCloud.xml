@@ -6,7 +6,15 @@
         <IlluminatedCloudConnection>
           <option name="connectionName" value="Trello Org" />
           <option name="connectionType" value="MDAPI" />
-          <option name="defaultModuleName" value="Trello_Org" />
+          <option name="developmentPackages">
+            <list>
+              <DevelopmentPackageExt>
+                <option name="description" value="MyPkg" />
+                <option name="moduleName" value="Trello_Org" />
+                <option name="name" value="MyPkg" />
+              </DevelopmentPackageExt>
+            </list>
+          </option>
           <option name="offlineSymbolTablePath" value="$PROJECT_DIR$/IlluminatedCloud/Trello_Org/OfflineSymbolTable.zip" />
         </IlluminatedCloudConnection>
       </list>

@@ -31,7 +31,12 @@ public with sharing class BoardController {
                 FROM Category__c
                 WHERE Board__c = :id
         ];
-        category.Position__c = Integer.valueOf(results[0].get('maxPosition')) + 1;
+        try {
+            category.Position__c = Integer.valueOf(results[0].get('maxPosition')) + 1;
+        } catch (Exception ex) {
+            category.Position__c = 0;
+        }
+
         insert category;
         return category;
     }
