@@ -25,7 +25,7 @@
     <lightning:layout multipleRows="true">
         <aura:iteration items="{!v.categories}" var="category" indexVar="index">
 
-            <lightning:layoutItem size="2" largeDeviceSize="2" mediumDeviceSize="4" smallDeviceSize="6">
+            <lightning:layoutItem size="2" largeDeviceSize="2" mediumDeviceSize="3" smallDeviceSize="4">
                 <lightning:layout multipleRows="true">
                     <c:verticalDropDiv index="{!index}"/>
                     <c:Category category="{!category}" tasks="{!category.TasksBoard__r}"/>
