@@ -16,6 +16,8 @@
         let buttons = component.find('labelButtons');
         let button = event.getSource();
         if (button.get("v.label") === "Edit") {
+            $A.util.removeClass(component.find("uploadArea"), "slds-hide");
+            $A.util.removeClass(component.find("deleteAtt"), "slds-hide");
             $A.util.removeClass(buttons, "slds-hide");
             $A.util.addClass(oldName, "slds-hide");
             $A.util.removeClass(newName, "slds-hide");
@@ -64,7 +66,7 @@
                 let button = component.find("vlButton");
                 button.set("v.variant", "neutral");
             }
-
+            helper.getAttachment(component);
         }
     },
 
@@ -78,12 +80,55 @@
                 priorities.push(button.get("v.label"));
                 component.set('v.priorities', priorities);
             }
-            button.set('v.variant','neutral');
+            button.set('v.variant', 'neutral');
         } else {
             let index = priorities.indexOf(button.get('v.label'));
-            priorities.splice(index,1);
+            priorities.splice(index, 1);
             button.set('v.variant', 'brand');
             component.set('v.priorities', priorities);
         }
+    },
+
+    startUpload: function (component, event, helper) {
+        const file = event.getSource().get("v.files")[0];
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            component.set("v.fileBase64", ev.target.result);
+        };
+        reader.readAsDataURL(file);
+        component.set("v.approveUploadFile", false);
+        component.set("v.fileName", file.name);
+    },
+
+    uploadToServer: function (component, event, helper) {
+        let action = component.get("c.uploadFile");
+        action.setParams({
+            "fileName": component.get("v.fileName"),
+            "fileBase64": component.get("v.fileBase64"),
+            "taskId": component.get("v.task.Id")
+        });
+        let attachments = component.get('v.attachments');
+        action.setCallback(this, function (response) {
+            if (response.getState() === "SUCCESS") {
+                component.set("v.approveUploadFile", true);
+                if(attachments) {
+                    attachments.push(response.getReturnValue());
+                    component.set('v.attachments', attachments);
+                } else {
+                    component.set('v.attachments',[response.getReturnValue()]);
+                }
+            } else {
+                console.log('Failed upload File with state:  ' + response.getState());
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    downloadFileFromTask : function (component, event, helper) {
+
+    },
+
+    deleteFileFromTask: function (component, event, helper) {
+
     }
 });

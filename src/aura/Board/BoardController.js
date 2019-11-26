@@ -73,7 +73,6 @@
         let category = event.getParam("category");
         let categories = component.get("v.categories");
         let index = -1;
-        console.log(categories.length);
         for (let i = 0; i < categories.length; i++) {
             if (Object.values(category)[0] === Object.values(categories[i])[0]) {
                 index = i;

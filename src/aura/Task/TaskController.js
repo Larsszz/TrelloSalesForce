@@ -9,9 +9,6 @@
             let array = priority.split(';');
             component.set("v.priorities", array);
         }
-            // if (component.get("v.task.Name")==='reegege') {
-            //     console.log(priority);
-            // }
     },
 
     startDrag: function (component, event, helper) {

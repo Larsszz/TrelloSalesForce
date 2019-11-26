@@ -3,8 +3,12 @@
  -->
 
 <aura:component description="TaskModalBox" controller="TaskBoardController" access="global">
+    <aura:attribute name="attachments" type="Attachment__c[]"/>
     <aura:attribute name="task" type="TaskBoard__c"/>
     <aura:attribute name="priorities" type="String[]"/>
+    <aura:attribute name="approveUploadFile" type="Boolean" default="true"/>
+    <aura:attribute name="fileBase64" type="String"/>
+    <aura:attribute name="fileName" type="String"/>
     <aura:registerEvent name="closeModalEvent" type="c:closeModalEvent"/>
     <aura:registerEvent name="editTaskEvent" type="c:editTaskEvent"/>
     <aura:registerEvent name="deleteTaskEvent" type="c:deleteTaskEvent"/>
@@ -61,6 +65,27 @@
                                       onclick="{!c.addRemovePriority}"/>
                     <lightning:button aura:id="vlButton" label="{!$Label.c.Very_Low_Priority}" variant="brand"
                                       onclick="{!c.addRemovePriority}"/>
+                </lightning:layout>
+                <br/>
+
+                <lightning:formattedText value="Attachments: " class="slds-text-heading_label"/>
+                <br/>
+
+                <aura:iteration items="{!v.attachments}" var="attachment">
+                    <lightning:layout horizontalAlign="spread">
+                        <lightning:button label="{!attachment.Name}" variant="base" value="{!attachment}"
+                                          onclick="{!c.downloadFileFromTask}"/>
+                        <lightning:buttonIcon alternativeText="Delete" iconName="utility:close"
+                                              aura:id="deleteAtt" onclick="{!c.deleteFileFromTask}"/>
+                    </lightning:layout>
+
+                </aura:iteration>
+
+
+                <lightning:layout aura:id="uploadArea" class="slds-hide" verticalAlign="end">
+                    <lightning:input label="Upload File" type="file" multiple="false" onchange="{!c.startUpload}"/>
+                    <lightning:button class="slds-m-around--xx-small" label="Upload" disabled="{!v.approveUploadFile}"
+                                      variant="brand" onclick="{!c.uploadToServer}"/>
                 </lightning:layout>
 
 
