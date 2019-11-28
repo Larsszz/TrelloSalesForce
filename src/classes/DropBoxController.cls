@@ -20,4 +20,35 @@ public with sharing class DropBoxController {
         HttpResponse response = http.send(request);
         return response.getStatusCode();
     }
+
+    public static Integer deleteFileOrFolder(String path) {
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://api.dropboxapi.com/2/files/delete_v2');
+        request.setMethod('POST');
+        request.setHeader('Authorization',TOKEN);
+        request.setHeader('Content-Type', 'application/json');
+        request.setBody('{"path": "' + path + '"}');
+        request.setTimeout(120000);
+
+        HttpResponse response = http.send(request);
+        return response.getStatusCode();
+    }
+
+    public static String downloadFile(String path) {
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://api.dropboxapi.com/2/sharing/create_shared_link');
+        request.setMethod('POST');
+        request.setHeader('Authorization',TOKEN);
+        request.setHeader('Content-Type', 'application/json');
+
+        request.setBody('{"path":"' + path + '","short_url":false}');
+        request.setTimeout(120000);
+        HttpResponse response = http.send(request);
+
+        Map<String, Object> responseMap = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
+        String link = responseMap.get('url').toString();
+        return link;
+    }
 }

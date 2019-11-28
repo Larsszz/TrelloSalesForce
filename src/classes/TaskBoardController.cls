@@ -62,15 +62,29 @@ public with sharing class TaskBoardController {
 
     @AuraEnabled
     public static Attachment__c uploadFile(String fileName, String fileBase64, Id taskId) {
-        String path = '/' + fileName;
+        String path = '/' + taskId + '/' + fileName;
         Blob fileBlob = EncodingUtil.base64Decode(fileBase64.split(',')[1]);
         Integer statusCode = DropBoxController.uploadFile(path, fileBlob);
-        if(statusCode == 200) {
-            Attachment__c attachment = new Attachment__c(Name=fileName, Link__c = path, TaskBoard__c = taskId);
+        if (statusCode == 200) {
+            Attachment__c attachment = new Attachment__c(Name = fileName, Link__c = path, TaskBoard__c = taskId);
             insert attachment;
             return attachment;
         }
         return null;
+    }
+
+    @AuraEnabled
+    public static void deleteFile(Attachment__c attachment) {
+        Integer responseCode = DropBoxController.deleteFileOrFolder(attachment.Link__c);
+        if (responseCode == 200) {
+            delete attachment;
+        }
+    }
+
+    @AuraEnabled
+    public static String downloadFile(Attachment__c attachment) {
+        String downloadLink = DropBoxController.downloadFile(attachment.Link__c);
+        return downloadLink;
     }
 
 }

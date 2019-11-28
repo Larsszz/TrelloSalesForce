@@ -7,6 +7,7 @@
     <aura:attribute name="task" type="TaskBoard__c"/>
     <aura:attribute name="priorities" type="String[]"/>
     <aura:attribute name="approveUploadFile" type="Boolean" default="true"/>
+    <aura:attribute name="disableDeleteButtons" type="Boolean" default="true"/>
     <aura:attribute name="fileBase64" type="String"/>
     <aura:attribute name="fileName" type="String"/>
     <aura:registerEvent name="closeModalEvent" type="c:closeModalEvent"/>
@@ -75,8 +76,8 @@
                     <lightning:layout horizontalAlign="spread">
                         <lightning:button label="{!attachment.Name}" variant="base" value="{!attachment}"
                                           onclick="{!c.downloadFileFromTask}"/>
-                        <lightning:buttonIcon alternativeText="Delete" iconName="utility:close"
-                                              aura:id="deleteAtt" onclick="{!c.deleteFileFromTask}"/>
+                        <lightning:buttonIcon alternativeText="Delete" iconName="utility:close" value="{!attachment}"
+                                              disabled="{!v.disableDeleteButtons}" onclick="{!c.deleteFileFromTask}"/>
                     </lightning:layout>
 
                 </aura:iteration>

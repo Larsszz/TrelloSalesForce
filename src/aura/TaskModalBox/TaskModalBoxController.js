@@ -17,13 +17,13 @@
         let button = event.getSource();
         if (button.get("v.label") === "Edit") {
             $A.util.removeClass(component.find("uploadArea"), "slds-hide");
-            $A.util.removeClass(component.find("deleteAtt"), "slds-hide");
             $A.util.removeClass(buttons, "slds-hide");
             $A.util.addClass(oldName, "slds-hide");
             $A.util.removeClass(newName, "slds-hide");
             $A.util.addClass(oldDescription, "slds-hide");
             $A.util.removeClass(newDescription, "slds-hide");
             button.set('v.label', 'Save');
+            component.set('v.disableDeleteButtons', false);
         } else if (button.get("v.label") === "Save") {
             let action = component.getEvent('editTaskEvent');
             action.setParams({
@@ -111,11 +111,11 @@
         action.setCallback(this, function (response) {
             if (response.getState() === "SUCCESS") {
                 component.set("v.approveUploadFile", true);
-                if(attachments) {
+                if (attachments) {
                     attachments.push(response.getReturnValue());
                     component.set('v.attachments', attachments);
                 } else {
-                    component.set('v.attachments',[response.getReturnValue()]);
+                    component.set('v.attachments', [response.getReturnValue()]);
                 }
             } else {
                 console.log('Failed upload File with state:  ' + response.getState());
@@ -124,11 +124,33 @@
         $A.enqueueAction(action);
     },
 
-    downloadFileFromTask : function (component, event, helper) {
-
+    downloadFileFromTask: function (component, event, helper) {
+        let attachment = event.getSource().get('v.value');
+        let action = component.get("c.downloadFile");
+        action.setParams({"attachment": attachment});
+        action.setCallback(this, function (response) {
+            if (response.getState() === "SUCCESS") {
+                document.location.href = response.getReturnValue();
+            } else {
+                console.log('Failed download File with state:  ' + response.getState());
+            }
+        });
+        $A.enqueueAction(action);
     },
 
     deleteFileFromTask: function (component, event, helper) {
-
+        let attachment = event.getSource().get('v.value');
+        let attachments = component.get('v.attachments');
+        let action = component.get("c.deleteFile");
+        action.setParams({"attachment": attachment});
+        action.setCallback(this, function (response) {
+            if (response.getState() === "SUCCESS") {
+                attachments.splice(attachments.indexOf(attachment),1);
+                component.set('v.attachments', attachments);
+            } else {
+                console.log('Failed delete File with state:  ' + response.getState());
+            }
+        });
+        $A.enqueueAction(action);
     }
 });
