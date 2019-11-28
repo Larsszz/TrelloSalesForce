@@ -5,17 +5,8 @@
 public with sharing class CategoryController {
     @AuraEnabled
     public static void deleteCategoryById(String id) {
-        Category__c toDelete = [
-                SELECT Id,
-                        Name
-                FROM Category__c
-                WHERE Id = :id
-        ];
-        List<TaskBoard__c> tasksToDelete = [
-                SELECT Id
-                FROM TaskBoard__c
-                WHERE Category__c = :id
-        ];
+        Category__c toDelete = Select_Utility.getCategoryByIdForDelete(id);
+        List<TaskBoard__c> tasksToDelete = Select_Utility.getTasksByCategoryIdForDelete(id);
         delete toDelete;
         delete tasksToDelete;
     }
@@ -23,11 +14,7 @@ public with sharing class CategoryController {
     @AuraEnabled
     public static TaskBoard__c addTaskByInput(String name, String description, String idCategory) {
         TaskBoard__c task = new TaskBoard__c(Name = name, Description__c = description, Category__c = idCategory);
-        List<AggregateResult> results = [
-                SELECT MAX(Position__c) maxPosition
-                FROM TaskBoard__c
-                WHERE Category__c = :idCategory
-        ];
+        List<AggregateResult> results = Select_Utility.getMaxPositionForTask(idCategory);
         if (results[0].get('maxPosition') == null) {
             task.Position__c = 0;
         } else {
@@ -39,13 +26,7 @@ public with sharing class CategoryController {
 
     @AuraEnabled
     public static void updateTaskCategory(TaskBoard__c task, Category__c category, Integer position) {
-
-        List<TaskBoard__c> toUpdate = [
-                SELECT Id, Position__c
-                FROM TaskBoard__c
-                WHERE Category__c = :category.Id AND Id != :task.Id
-                ORDER BY Position__c
-        ];
+        List<TaskBoard__c> toUpdate = Select_Utility.getOrderedTasksByPosition(category.Id, task.Id);
         if (position == toUpdate.size()) {
             toUpdate.add(task);
         } else {

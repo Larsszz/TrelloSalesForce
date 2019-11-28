@@ -5,51 +5,25 @@
 public with sharing class BoardController {
     @AuraEnabled
     public static List<Category__c> getNewBoard(String id) {
-        return [
-                SELECT Id,
-                        Name,
-                        Position__c,
-                        Board__c, (
-                        SELECT Name,
-                                Description__c,
-                                Position__c,
-                                Priority__c
-                        FROM TasksBoard__r
-                        ORDER BY Position__c
-                )
-                FROM Category__c
-                WHERE Board__c = :id
-                ORDER BY Position__c
-        ];
+        return Select_Utility.getBoardCategories(id);
     }
 
     @AuraEnabled
     public static Category__c crateNewCategory(String id, String name) {
         Category__c category = new Category__c(Name = name, Board__c = id);
-        List<AggregateResult> results = [
-                SELECT MAX(Position__c) maxPosition
-                FROM Category__c
-                WHERE Board__c = :id
-        ];
+        List<AggregateResult> results = Select_Utility.getMaxPositionForCategory(category.Board__c);
         try {
             category.Position__c = Integer.valueOf(results[0].get('maxPosition')) + 1;
         } catch (Exception ex) {
             category.Position__c = 0;
         }
-
         insert category;
         return category;
     }
 
     @AuraEnabled
     public static void updateCategoriesPosition(Category__c category, Integer position) {
-        List<Category__c> toUpdate = [
-                SELECT Position__c
-                FROM Category__c
-                WHERE Board__c = :category.Board__c
-                AND Id != :category.Id
-                ORDER BY Position__c
-        ];
+        List<Category__c> toUpdate = Select_Utility.getOrderedCategoriesByPosition(category);
         if (position == toUpdate.size()) {
             toUpdate.add(category);
         } else {

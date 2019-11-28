@@ -5,7 +5,12 @@
 public with sharing class TaskBoardTriggerHandler {
     public static void isAfterDelete(List<TaskBoard__c> taskBoards) {
         for (TaskBoard__c task: taskBoards) {
-            DropBoxController.deleteFileOrFolder('/'+ task.Id);
+            TaskBoardTriggerHandler.callOut('/'+ task.Id);
         }
+    }
+
+    @Future(Callout=true)
+    private static void callOut(String path){
+        DropBoxController.deleteFileOrFolder(path);
     }
 }

@@ -3,5 +3,9 @@
  */
 
 trigger TaskBoardTrigger on TaskBoard__c (after insert, after update, after delete) {
-    //EventBus.publish(new Change_board__e());
+    if (Trigger.isDelete) {
+        if(Trigger.isAfter) {
+            TaskBoardTriggerHandler.isAfterDelete(Trigger.old);
+        }
+    }
 }
