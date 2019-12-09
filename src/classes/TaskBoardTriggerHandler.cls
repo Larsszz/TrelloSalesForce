@@ -11,6 +11,6 @@ public with sharing class TaskBoardTriggerHandler {
 
     @Future(Callout=true)
     private static void callOut(String path){
-        DropBoxController.deleteFileOrFolder(path);
+       new DropBoxController().deleteFileOrFolder(path);
     }
 }

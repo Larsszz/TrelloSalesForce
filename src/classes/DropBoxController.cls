@@ -2,53 +2,111 @@
  * Created by IlarionTokarskyi on 11/25/2019.
  */
 
-public with sharing class DropBoxController {
+global with sharing class DropBoxController {
 
-    private static final String TOKEN = 'Bearer AHK8IISvWb0AAAAAAAAjY-m4Q7spoJbt33SuMX26S275gp8NUqc-rLPkvDshRgOT';
+    private static final String TOKEN = SelectUtility.getDropBoxToken();
 
-    public static Integer uploadFile(String path, Blob file) {
-        Http http = new Http();
+    public HttpResponse sendPostHttpRequest(String endPoint, Map<String, String> headerMap, Object body) {
         HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://content.dropboxapi.com/2/files/upload');
+        request.setEndpoint(endPoint);
         request.setMethod('POST');
-        request.setHeader('Authorization',TOKEN);
-        request.setHeader('Content-Type', 'application/octet-stream');
-        request.setHeader('Dropbox-API-Arg','{"path":"' + path + '","mode":"add","autorename":true,"mute":false,"strict_conflict":false}');
-        request.setBodyAsBlob(file);
-        request.setTimeout(120000);
-
-        HttpResponse response = http.send(request);
-        return response.getStatusCode();
+        request.setHeader('Authorization', TOKEN);
+        Set<String> keys = headerMap.keySet();
+        for (String key : keys) {
+            request.setHeader(key, headerMap.get(key));
+        }
+        request = setBody(request, body);
+        HttpResponse response = new Http().send(request);
+        return response;
     }
 
-    public static Integer deleteFileOrFolder(String path) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://api.dropboxapi.com/2/files/delete_v2');
-        request.setMethod('POST');
-        request.setHeader('Authorization',TOKEN);
-        request.setHeader('Content-Type', 'application/json');
-        request.setBody('{"path": "' + path + '"}');
-        request.setTimeout(120000);
-
-        HttpResponse response = http.send(request);
-        return response.getStatusCode();
+    private HttpRequest setBody(HttpRequest request, Object body) {
+        if (body instanceof String) {
+            request.setBody((String) body);
+            return request;
+        } else if (body instanceof Blob) {
+            request.setBodyAsBlob((Blob) body);
+            return request;
+        } else {
+            return request;
+        }
     }
 
-    public static String downloadFile(String path) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://api.dropboxapi.com/2/sharing/create_shared_link');
-        request.setMethod('POST');
-        request.setHeader('Authorization',TOKEN);
-        request.setHeader('Content-Type', 'application/json');
+    public HttpResponse uploadFile(String path, Blob file) {
+        Map<String, String> headerMap = new Map<String, String>();
+        headerMap.put('Content-Type', 'application/octet-stream');
+        headerMap.put('Dropbox-API-Arg', '{"path":"' + path + '","mode":"add","autorename":true,"mute":false,"strict_conflict":false}');
+        HttpResponse response = sendPostHttpRequest('https://content.dropboxapi.com/2/files/upload', headerMap, file);
+        if (response.getStatus() == 'OK') {
+            setNewCursor();
+        }
+        return response;
+    }
 
-        request.setBody('{"path":"' + path + '","short_url":false}');
-        request.setTimeout(120000);
-        HttpResponse response = http.send(request);
+    public HttpResponse deleteFileOrFolder(String path) {
+        Map<String, String> headerMap = new Map<String, String>();
+        headerMap.put('Content-Type', 'application/json');
+        String body = '{"path": "' + path + '"}';
+        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/files/delete_v2', headerMap, body);
+        if (response.getStatus() == 'OK') {
+            setNewCursor();
+        }
+        return response;
+    }
 
-        Map<String, Object> responseMap = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
+    public String downloadFile(String path) {
+        Map<String, String> headerMap = new Map<String, String>();
+        headerMap.put('Content-Type', 'application/json');
+        String body = '{"path":"' + path + '","short_url":false}';
+        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/sharing/create_shared_link', headerMap, body);
+        return getLinkFromResponse(response);
+    }
+
+    private String getLinkFromResponse(HttpResponse response) {
+        if (String.isEmpty(response.getBody())) {
+            return null;
+        }
+        Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
         String link = responseMap.get('url').toString();
         return link;
+    }
+
+    public HttpResponse getLatestCursor() {
+        Map<String, String> headerMap = new Map<String, String>();
+        headerMap.put('Content-Type', 'application/json');
+        String body = '{"path": "", "recursive": true}';
+        return sendPostHttpRequest('https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor', headerMap, body);
+    }
+
+    public String getCursor(HttpResponse response) {
+        Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+        String cursor = responseMap.get('cursor').toString();
+        return cursor;
+    }
+
+    global void changeDataFromDB() {
+        String cursor = SelectUtility.getCursor().Data__c;
+        Map<String, String> headerMap = new Map<String, String>();
+        headerMap.put('Content-Type', 'application/json');
+        String body = '{"cursor": "' + cursor + '"}';
+        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/files/list_folder/continue', headerMap, body);
+        if (response.getStatus() == 'OK') {
+            System.debug(response.getBody());
+            new WebHookDBHandler(response);
+            cursor = getCursor(response);
+            changeCursor(cursor);
+        }
+    }
+
+    public void setNewCursor() {
+        HttpResponse response = getLatestCursor();
+        String cursor = getCursor(response);
+        changeCursor(cursor);
+    }
+
+    public void changeCursor(String cursor) {
+        Cursor__c oldCursor = SelectUtility.getCursor();
+        oldCursor.Data__c = cursor;
+        update oldCursor;
     }
 }

@@ -5,8 +5,8 @@
 public with sharing class CategoryController {
     @AuraEnabled
     public static void deleteCategoryById(String id) {
-        Category__c toDelete = Select_Utility.getCategoryByIdForDelete(id);
-        List<TaskBoard__c> tasksToDelete = Select_Utility.getTasksByCategoryIdForDelete(id);
+        Category__c toDelete = SelectUtility.getCategoryByIdForDelete(id);
+        List<TaskBoard__c> tasksToDelete = SelectUtility.getTasksByCategoryIdForDelete(id);
         delete toDelete;
         delete tasksToDelete;
     }
@@ -14,7 +14,7 @@ public with sharing class CategoryController {
     @AuraEnabled
     public static TaskBoard__c addTaskByInput(String name, String description, String idCategory) {
         TaskBoard__c task = new TaskBoard__c(Name = name, Description__c = description, Category__c = idCategory);
-        List<AggregateResult> results = Select_Utility.getMaxPositionForTask(idCategory);
+        List<AggregateResult> results = SelectUtility.getMaxPositionForTask(idCategory);
         if (results[0].get('maxPosition') == null) {
             task.Position__c = 0;
         } else {
@@ -26,7 +26,7 @@ public with sharing class CategoryController {
 
     @AuraEnabled
     public static void updateTaskCategory(TaskBoard__c task, Category__c category, Integer position) {
-        List<TaskBoard__c> toUpdate = Select_Utility.getOrderedTasksByPosition(category.Id, task.Id);
+        List<TaskBoard__c> toUpdate = SelectUtility.getOrderedTasksByPosition(category.Id, task.Id);
         if (position == toUpdate.size()) {
             toUpdate.add(task);
         } else {

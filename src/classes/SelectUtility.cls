@@ -2,7 +2,7 @@
  * Created by IlarionTokarskyi on 11/28/2019.
  */
 
-public with sharing class Select_Utility {
+public with sharing class SelectUtility {
     public static List<Category__c> getBoardCategories(String id) {
         return [
                 SELECT Id,
@@ -23,11 +23,11 @@ public with sharing class Select_Utility {
     }
 
     public static List<AggregateResult> getMaxPositionForCategory(String boardId) {
-         return [
-                 SELECT MAX(Position__c) maxPosition
-                 FROM Category__c
-                 WHERE Board__c = :boardId
-         ];
+        return [
+                SELECT MAX(Position__c) maxPosition
+                FROM Category__c
+                WHERE Board__c = :boardId
+        ];
     }
 
     public static List<AggregateResult> getMaxPositionForTask(String categoryId) {
@@ -76,5 +76,17 @@ public with sharing class Select_Utility {
     }
     public static List<Attachment__c> getAttachmentsByTaskId(Id taskId) {
         return [SELECT Name, Link__c, TaskBoard__c FROM Attachment__c WHERE TaskBoard__c = :taskId];
+    }
+
+    public static Cursor__c getCursor() {
+        return [SELECT Data__c FROM Cursor__c WHERE Name = 'First' LIMIT 1];
+    }
+
+    public static List<Attachment__c> getAttachmentsByLinks(List<String> links) {
+        return [SELECT Name, Link__c, TaskBoard__c FROM Attachment__c WHERE Link__c IN :links];
+    }
+
+    public static String getDropBoxToken() {
+        return [SELECT Token__c FROM DropBox_Token__mdt WHERE Label = 'Drop Box Token'].Token__c;
     }
 }

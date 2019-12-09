@@ -37,7 +37,7 @@ public with sharing class TaskBoardControllerTest {
     }
 
     @IsTest
-    static void testUploadFile() {
+    static void testSuccessUploadFile() {
         TaskBoard__c taskBoard = [SELECT Id, Name FROM TaskBoard__c LIMIT 1];
 
         Test.startTest();
@@ -50,7 +50,22 @@ public with sharing class TaskBoardControllerTest {
     }
 
     @IsTest
-    static void testDownloadFile() {
+    static void testFailedUploadFile() {
+        TaskBoard__c taskBoard = [SELECT Id, Name FROM TaskBoard__c LIMIT 1];
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new DropBoxHttpCalloutMockFailed());
+        try{
+            Attachment__c attachment = TaskBoardController.uploadFile('test.txt', ',cmVyZ2VnZWdlcmdlcmdncg==', taskBoard.Id);
+            System.assert(false);
+        } catch (DropBoxException exc) {
+            System.assert(true);
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void testSuccessDownloadFile() {
         String fileLink = 'https://www.dropbox.com/s/470vsc1j01myos1/234.docx?dl=0';
         Attachment__c attachment = [SELECT Link__c FROM Attachment__c LIMIT 1];
 
@@ -63,7 +78,23 @@ public with sharing class TaskBoardControllerTest {
     }
 
     @IsTest
-    static void testDeleteFile() {
+    static void testFailedDownloadFile() {
+        Attachment__c attachment = [SELECT Link__c FROM Attachment__c LIMIT 1];
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new DropBoxDownloadMockFail());
+        try{
+            String linkFromController = TaskBoardController.downloadFile(attachment);
+            System.assert(false);
+        } catch (DropBoxException exc) {
+            System.assert(true);
+        }
+        Test.stopTest();
+
+    }
+
+    @IsTest
+    static void testSuccessDeleteFile() {
         TaskBoard__c taskBoard = [SELECT Id FROM TaskBoard__c LIMIT 1];
 
         Test.startTest();
@@ -73,6 +104,22 @@ public with sharing class TaskBoardControllerTest {
 
         List<Attachment__c> attachments = [SELECT Id FROM Attachment__c WHERE TaskBoard__c =: taskBoard.Id];
         System.assertEquals(0,attachments.size());
+    }
+
+    @IsTest
+    static void testFailedDeleteFile() {
+        TaskBoard__c taskBoard = [SELECT Id FROM TaskBoard__c LIMIT 1];
+
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new DropBoxHttpCalloutMockFailed());
+        try{
+            TaskBoardController.deleteFile([SELECT Link__c FROM Attachment__c WHERE TaskBoard__c =: taskBoard.Id]);
+            System.assert(false);
+        } catch (DropBoxException exc) {
+            System.assert(true);
+        }
+        Test.stopTest();
+
     }
 
 }

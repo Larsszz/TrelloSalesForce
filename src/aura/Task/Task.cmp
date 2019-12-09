@@ -26,7 +26,7 @@
                     <c:priorityComponent priority="{!priority}"/>
                 </aura:iteration>
             </lightning:layout>
-            <lightning:formattedText value="{!v.task.Name}"/>
+            <lightning:formattedText value="{!v.task.Name}"/>{!v.task.Attachments__r[0].Name}
             <br/>
         </div>
         <div class="slds-m-around--small">

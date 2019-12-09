@@ -5,13 +5,13 @@
 public with sharing class BoardController {
     @AuraEnabled
     public static List<Category__c> getNewBoard(String id) {
-        return Select_Utility.getBoardCategories(id);
+        return SelectUtility.getBoardCategories(id);
     }
 
     @AuraEnabled
     public static Category__c crateNewCategory(String id, String name) {
         Category__c category = new Category__c(Name = name, Board__c = id);
-        List<AggregateResult> results = Select_Utility.getMaxPositionForCategory(category.Board__c);
+        List<AggregateResult> results = SelectUtility.getMaxPositionForCategory(category.Board__c);
         try {
             category.Position__c = Integer.valueOf(results[0].get('maxPosition')) + 1;
         } catch (Exception ex) {
@@ -23,7 +23,7 @@ public with sharing class BoardController {
 
     @AuraEnabled
     public static void updateCategoriesPosition(Category__c category, Integer position) {
-        List<Category__c> toUpdate = Select_Utility.getOrderedCategoriesByPosition(category);
+        List<Category__c> toUpdate = SelectUtility.getOrderedCategoriesByPosition(category);
         if (position == toUpdate.size()) {
             toUpdate.add(category);
         } else {

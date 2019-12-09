@@ -5,6 +5,8 @@
 public with sharing class TestUtilities {
     public static void setup() {
         Board__c board = new Board__c(Name = 'Test Board');
+        Cursor__c cursor = new Cursor__c(Name = 'First', Data__c = 'ergegrgege');
+        insert cursor;
         insert board;
         List<Category__c> categories = new List<Category__c>();
         List<TaskBoard__c> taskBoards = new List<TaskBoard__c>();
