@@ -33,10 +33,12 @@ global with sharing class DropBoxController {
     }
 
     public HttpResponse uploadFile(String path, Blob file) {
+        String endPoint = 'https://content.dropboxapi.com/2/files/upload';
         Map<String, String> headerMap = new Map<String, String>();
         headerMap.put('Content-Type', 'application/octet-stream');
-        headerMap.put('Dropbox-API-Arg', '{"path":"' + path + '","mode":"add","autorename":true,"mute":false,"strict_conflict":false}');
-        HttpResponse response = sendPostHttpRequest('https://content.dropboxapi.com/2/files/upload', headerMap, file);
+        headerMap.put('Dropbox-API-Arg', '{"path":"' + path
+                + '","mode":"add","autorename":true,"mute":false,"strict_conflict":false}');
+        HttpResponse response = sendPostHttpRequest(endPoint, headerMap, file);
         if (response.getStatus() == 'OK') {
             setNewCursor();
         }
@@ -44,10 +46,11 @@ global with sharing class DropBoxController {
     }
 
     public HttpResponse deleteFileOrFolder(String path) {
+        String endpoint = 'https://api.dropboxapi.com/2/files/delete_v2';
         Map<String, String> headerMap = new Map<String, String>();
         headerMap.put('Content-Type', 'application/json');
         String body = '{"path": "' + path + '"}';
-        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/files/delete_v2', headerMap, body);
+        HttpResponse response = sendPostHttpRequest(endpoint, headerMap, body);
         if (response.getStatus() == 'OK') {
             setNewCursor();
         }
@@ -55,10 +58,11 @@ global with sharing class DropBoxController {
     }
 
     public String downloadFile(String path) {
+        String endpoint = 'https://api.dropboxapi.com/2/sharing/create_shared_link';
         Map<String, String> headerMap = new Map<String, String>();
         headerMap.put('Content-Type', 'application/json');
         String body = '{"path":"' + path + '","short_url":false}';
-        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/sharing/create_shared_link', headerMap, body);
+        HttpResponse response = sendPostHttpRequest(endpoint, headerMap, body);
         return getLinkFromResponse(response);
     }
 
@@ -72,10 +76,11 @@ global with sharing class DropBoxController {
     }
 
     public HttpResponse getLatestCursor() {
+        String endpoint = 'https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor';
         Map<String, String> headerMap = new Map<String, String>();
         headerMap.put('Content-Type', 'application/json');
         String body = '{"path": "", "recursive": true}';
-        return sendPostHttpRequest('https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor', headerMap, body);
+        return sendPostHttpRequest(endpoint, headerMap, body);
     }
 
     public String getCursor(HttpResponse response) {
@@ -85,11 +90,12 @@ global with sharing class DropBoxController {
     }
 
     global void changeDataFromDB() {
+        String endpoint = 'https://api.dropboxapi.com/2/files/list_folder/continue';
         String cursor = SelectUtility.getCursor().Data__c;
         Map<String, String> headerMap = new Map<String, String>();
         headerMap.put('Content-Type', 'application/json');
         String body = '{"cursor": "' + cursor + '"}';
-        HttpResponse response = sendPostHttpRequest('https://api.dropboxapi.com/2/files/list_folder/continue', headerMap, body);
+        HttpResponse response = sendPostHttpRequest(endpoint, headerMap, body);
         if (response.getStatus() == 'OK') {
             System.debug(response.getBody());
             new WebHookDBHandler(response);
