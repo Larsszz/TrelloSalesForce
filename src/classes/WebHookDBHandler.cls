@@ -29,19 +29,19 @@ public with sharing class WebHookDBHandler {
         }
         List<Entity> toInsert = new List<WebHookDBHandler.Entity>();
         List<Entity> toDelete = new List<WebHookDBHandler.Entity>();
-        for(Entity entity: entities) {
-            if(entity.tag == 'deleted') {
+        for (Entity entity : entities) {
+            if (entity.tag == 'deleted') {
                 toDelete.add(entity);
-            } else if(entity.tag == 'file') {
+            } else if (entity.tag == 'file') {
                 toInsert.add(entity);
             }
         }
         toDeleteAtt = getAttachmentsByEntities(toDelete);
-        if (toDeleteAtt.size()>0) {
+        if (toDeleteAtt.size() > 0) {
             delete toDeleteAtt;
         }
         toInsertAtt = createAttachmentsByEntities(toInsert);
-        if (toInsertAtt.size()>0) {
+        if (toInsertAtt.size() > 0) {
             insert toInsertAtt;
         }
     }
@@ -59,14 +59,16 @@ public with sharing class WebHookDBHandler {
     private List<Entity> getEntities(List<Map<String, Object>> listMapsProperties) {
         List<Entity> entities = new List<WebHookDBHandler.Entity>();
         for (Map<String, Object> property : listMapsProperties) {
-            entities.add(new Entity((String) property.get('.tag'), (String) property.get('name'), (String) property.get('path_display')));
+            entities.add(new Entity((String) property.get('.tag'),
+                    (String) property.get('name'),
+                    (String) property.get('path_display')));
         }
         return entities;
     }
 
     private List<Attachment__c> getAttachmentsByEntities(List<Entity> entities) {
         List<String> links = new List<String>();
-        for (Entity entity: entities) {
+        for (Entity entity : entities) {
             links.add(entity.path);
         }
         return SelectUtility.getAttachmentsByLinks(links);
@@ -74,8 +76,10 @@ public with sharing class WebHookDBHandler {
 
     private List<Attachment__c> createAttachmentsByEntities(List<Entity> entities) {
         List<Attachment__c> result = new List<Attachment__c>();
-        for(Entity entity: entities) {
-            result.add(new Attachment__c(Name = entity.entityName, Link__c = entity.path, TaskBoard__c = getTaskIdFromEntity(entity)));
+        for (Entity entity : entities) {
+            result.add(new Attachment__c(Name = entity.entityName,
+                    Link__c = entity.path,
+                    TaskBoard__c = getTaskIdFromEntity(entity)));
         }
         return result;
     }
